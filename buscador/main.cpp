@@ -23,10 +23,9 @@ void procesarArchivo(const std::string& archivo) {
 
     // 6. Validaciones: Si el archivo no existe
     if (!archivo_entrada.is_open()) {
-        std::cerr << "Error: No se pudo abrir el archivo '" << archivo << "'. Asegurese de que existe." << std::endl;
+        std::cout << "Error: No se pudo abrir el archivo '" << archivo << "'. Asegurese de que existe." << std::endl;
         return; 
     }
-
     std::string palabra_a_buscar;
     std::string palabra_a_buscar_minusculas; 
     bool entrada_valida = false; 
@@ -34,7 +33,7 @@ void procesarArchivo(const std::string& archivo) {
     // 6. Validaciones
     while (!entrada_valida) {
         std::cout << "\nIngrese la palabra o caracter a buscar: ";
-        std::getline(std::cin, palabra_a_buscar); // Leer la línea completa, incluyendo espacios
+        std::getline(std::cin, palabra_a_buscar); // lee la línea completa, incluyendo espacios
         
         if (palabra_a_buscar.empty()) {
             std::cout << "Error: La palabra o caracter a buscar no puede estar vacio. Por favor, intente de nuevo." << std::endl;
