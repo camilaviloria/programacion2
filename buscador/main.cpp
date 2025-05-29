@@ -1,7 +1,7 @@
-#include <iostream> // Para entrada/salida de consola
-#include <fstream>  // Para manejo de archivos (ifstream)
-#include <string>   // Para manipulación de cadenas de texto
-#include <vector>   // Para almacenar líneas del archivo (opcional, pero útil)
+#include <iostream> 
+#include <fstream>  
+#include <string>   
+#include <vector>   
 #include <algorithm> // Para std::transform y std::tolower
 #include <locale>  
 
@@ -31,7 +31,7 @@ void procesarArchivo(const std::string& archivo) {
     std::string palabra_a_buscar_minusculas; 
     bool entrada_valida = false; 
 
-    // 6. Validaciones: Si el usuario ingresa una palabra/carácter vacío
+    // 6. Validaciones
     while (!entrada_valida) {
         std::cout << "\nIngrese la palabra o caracter a buscar: ";
         std::getline(std::cin, palabra_a_buscar); // Leer la línea completa, incluyendo espacios
@@ -39,7 +39,7 @@ void procesarArchivo(const std::string& archivo) {
         if (palabra_a_buscar.empty()) {
             std::cout << "Error: La palabra o caracter a buscar no puede estar vacio. Por favor, intente de nuevo." << std::endl;
         } else {
-            entrada_valida = true; // La entrada es válida, salir del bucle
+            entrada_valida = true; 
             palabra_a_buscar_minusculas = aMinusculas(palabra_a_buscar); // Convertir para búsqueda insensible
         }
     }
@@ -63,10 +63,8 @@ void procesarArchivo(const std::string& archivo) {
         while ((pos = linea_minusculas.find(palabra_a_buscar_minusculas, pos)) != std::string::npos) {
             // Insertar el código de color verde antes de la coincidencia
             linea_a_mostrar.insert(pos, ANSI_COLOR_GREEN);
-            // Insertar el código de reseteo después de la coincidencia (ajustando la posición por el código insertado)
             linea_a_mostrar.insert(pos + palabra_a_buscar_minusculas.length() + ANSI_COLOR_GREEN.length(), ANSI_COLOR_RESET);
             // Ajustar la posición para la siguiente búsqueda
-            // Se mueve más allá de la coincidencia y de los códigos ANSI que acabamos de insertar
             pos += palabra_a_buscar_minusculas.length() + ANSI_COLOR_GREEN.length() + ANSI_COLOR_RESET.length();
             coincidencias_en_linea++;
         }
