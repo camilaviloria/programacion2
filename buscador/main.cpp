@@ -6,42 +6,40 @@
 #include <limits>    // Para std::numeric_limits para limpiar el buffer de entrada
 #include <cctype>
 
-// Códigos de escape ANSI para colores
+// colores
 const std::string ANSI_COLOR_GREEN = "\x1b[32m";
 const std::string ANSI_COLOR_RESET = "\x1b[0m";
 
 // Función para convertir una cadena a minúsculas
-std::string aMinusculas(std::string texto){
-    std::transform(texto.begin(), texto.end(), texto.begin(), ::tolower);
+std::string aMinusculas(std::string texto) {
+    for (size_t i = 0; i < texto.length(); ++i) {
+        texto[i] = std::tolower(static_cast<unsigned char>(texto[i]));
+    }
     return texto;
 }
 
-// Función principal para realizar la búsqueda y mostrar resultados
 void procesarArchivo(const std::string& archivos) {
-    std::ifstream file(archivos);
+    std::ifstream archivo_entrada(archivos); 
 
     // 6. Validaciones: Si el archivo no existe
-    if (!file.is_open()) {
+    if (!archivo_entrada.is_open()) {
         std::cerr << "Error: No se pudo abrir el archivo '" << archivos << "'. Asegurese de que existe." << std::endl;
-        return; // Termina la función si el archivo no existe
+        return; 
     }
 
-    std::string search_term;
-    std::string lower_search_term;
-    bool valid_input = false;
-
-    // 6. Validaciones: Si el usuario ingresa una palabra/carácter vacío
+    std::string palabra_a_buscar;
+    std::string palabra_a_buscar_minusculas; 
+    bool entrada_valida = false; 
     
-    int main() {
-        std::string palabraBuscar;
-        char opcion;
-
-        do {
-            std::cout << "ingrese la palabra o caracter que desee buscar: ";
-            std::getline(std::cin, palabraBuscar); //getline para leer las lineas
-
-            while (palabraBuscar.empty()) {
-                std::cout <<" error la palabra o caracter no puede estar vacio, ingrese denuevo"
-            }
+    // 6. Validaciones: Si el usuario ingresa una palabra/carácter vacío
+    while (!entrada_valida) {
+        std::cout << "\nIngrese la palabra o caracter a buscar: ";
+        std::getline(std::cin, palabra_a_buscar); // Leer la línea completa, incluyendo espacios
+        
+        if (palabra_a_buscar.empty()) {
+            std::cout << "Error: La palabra o caracter a buscar no puede estar vacio. Por favor, intente de nuevo." << std::endl;
+        } else {
+            entrada_valida = true; // La entrada es válida, salir del bucle
+            palabra_a_buscar_minusculas = aMinusculas(palabra_a_buscar); // Convertir para búsqueda insensible
         }
     }
