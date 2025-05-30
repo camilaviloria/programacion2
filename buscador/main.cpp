@@ -3,7 +3,8 @@
 #include <string>   
 #include <vector>   
 #include <algorithm> // Para std::transform y std::tolower
-#include <locale>  
+#include <limits>    
+#include <cctype>    
 
 // colores
 const std::string ANSI_COLOR_GREEN = "\x1b[32m";
