@@ -2,7 +2,7 @@
 #include <fstream>  
 #include <string>   
 #include <vector>   
-#include <algorithm> // Para std::transform y std::tolower
+#include <algorithm> 
 #include <limits>    
 #include <cctype>    
 
