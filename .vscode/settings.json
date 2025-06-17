@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.txt": "pip-requirements",
+        "iostream": "cpp"
+    }
+}
