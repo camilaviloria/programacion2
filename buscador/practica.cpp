@@ -1,10 +1,7 @@
 #include <iostream> 
 #include <fstream>  
 #include <string>   
-#include <vector>   
-#include <algorithm> 
 #include <limits>    
-#include <cctype>    
 
 using namespace std;
 
