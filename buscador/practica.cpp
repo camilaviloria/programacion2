@@ -10,7 +10,7 @@ struct Producto {
     char Nombre[30];
     int Precio;
     int Stock;
-    char Categoria[30];
+    char Categoria;
     bool Activo;
 };
 
@@ -30,8 +30,7 @@ void agregarProducto() {
     cout << "Precio: "; cin >> p.Precio; limpiarBuffer();
     cout << "Stock: "; cin >> p.Stock; limpiarBuffer();
     cout << "Categoria: "; cin >> p.Categoria; limpiarBuffer();
-    cout << "Activo o no (1 para activo, 0 para inactivo): "; cin >> p.Activo; limpiarBuffer(); 
-
+    cout << "Activo o no (1 para activo, 0 para inactivo): "; cin >> p.Activo; limpiarBuffer();
     archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
     archivo.close();
     cout << "Producto agregado." << endl;
@@ -43,23 +42,49 @@ void mostrarDatosProducto(const Producto& p) {
               << ", Categoria: " << p.Categoria << ", Activo o no: " << (p.Activo ? "Si" : "No") << endl;
 }
 
-void mostrarProducto() {
+void mostrarProductoActivos() {
     ifstream archivo(producto, ios::binary);
     if (!archivo.is_open()) { cerr << "No hay productos." << endl; return; }
 
     Producto p;
-    bool productos_activos_encontrados = false; 
+    bool productos_activos = false; 
     cout << "\n--- LISTA DE PRODUCTOS ACTIVOS ---" << endl;
     while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
         if (p.Activo) {
             mostrarDatosProducto(p);
-            productos_activos_encontrados = true;
+            productos_activos = true;
         }
     }
     archivo.close();
 
-    if (!productos_activos_encontrados) {
+    if (!productos_activos) {
         cout << "No se encontraron productos activos." << endl;
+    }
+}
+
+void mostrarProductoCategoria() {
+    ifstream archivo(producto, ios::binary);
+    if (!archivo.is_open()) { cerr << "No hay productos para buscar." << endl; return; }
+
+    char categoriaBuscada;
+    cout << "Ingrese la categoria a buscar: ";
+    cin >> categoriaBuscada;
+    limpiarBuffer();
+
+    Producto p;
+    bool encontrada_categoria = false;
+    cout << "\n--- LISTA DE PRODUCTOS POR CATEGORIA '" << categoriaBuscada << "' ---" << endl;
+
+    while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
+        if (p.Categoria == categoriaBuscada) {
+            mostrarDatosProducto(p);
+            encontrada_categoria = true;
+        }
+    }
+    archivo.close();
+
+    if (!encontrada_categoria) {
+        cout << "No se encontraron productos activos para la categoria '" << categoriaBuscada << "'." << endl;
     }
 }
 
@@ -69,6 +94,7 @@ int main() {
         cout << "\n--- MENU DE PRODUCTOS ---" << endl;
         cout << "1. Agregar Producto\n";
         cout << "2. Mostrar Productos Activos\n"; 
+        cout << "2. Mostrar Productos Por Categoria\n"; 
         cout << "0. Salir\n";
         cout << "Ingrese su opcion: ";
         while (!(cin >> opcion)) { 
@@ -83,7 +109,10 @@ int main() {
                 agregarProducto();
                 break;
             case 2:
-                mostrarProducto();
+                mostrarProductoActivos();
+                break;
+            case 3:
+                mostrarProductoCategoria();
                 break;
             case 0:
                 cout << "Saliendo del programa." << endl;
