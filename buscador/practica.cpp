@@ -37,7 +37,7 @@ void agregarProducto() {
 
     archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
     archivo.close();
-    cout << "Persona agregada." << endl;
+    cout << "Producto agregado." << endl;
 }
 
 void mostrarDatosProducto(const Producto& p) {
