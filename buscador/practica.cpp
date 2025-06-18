@@ -14,14 +14,14 @@ struct Producto {
     bool Activo;
 };
 
-const string productos = "productos.bin";
+const string producto = "producto.bin";
 
 void limpiarBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
 };
 
 void agregarProducto() {
-    ofstream archivo(productos, ios::binary | ios::app); 
+    ofstream archivo(producto, ios::binary | ios::app); 
     if (!archivo.is_open()) { cerr << "error al abrir archivo." << endl; return; }
 
     Producto p;
@@ -44,7 +44,7 @@ void mostrarDatosProducto(const Producto& p) {
 }
 
 void mostrarProducto() {
-    ifstream archivo(productos, ios::binary);
+    ifstream archivo(producto, ios::binary);
     if (!archivo.is_open()) { cerr << "No hay productos." << endl; return; }
 
     Producto p;
