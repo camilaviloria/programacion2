@@ -48,18 +48,27 @@ void mostrarProducto() {
     if (!archivo.is_open()) { cerr << "No hay productos." << endl; return; }
 
     Producto p;
-    cout << "\n--- LISTA DE PRODUCTOS ---" << endl;
+    bool productos_activos_encontrados = false; 
+    cout << "\n--- LISTA DE PRODUCTOS ACTIVOS ---" << endl;
     while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
-        mostrarDatosProducto(p);
+        if (p.Activo) {
+            mostrarDatosProducto(p);
+            productos_activos_encontrados = true;
+        }
     }
     archivo.close();
+
+    if (!productos_activos_encontrados) {
+        cout << "No se encontraron productos activos." << endl;
+    }
 }
+
 int main() {
     int opcion;
     do {
         cout << "\n--- MENU DE PRODUCTOS ---" << endl;
         cout << "1. Agregar Producto\n";
-        cout << "2. Mostrar Productos\n";
+        cout << "2. Mostrar Productos Activos\n"; 
         cout << "0. Salir\n";
         cout << "Ingrese su opcion: ";
         while (!(cin >> opcion)) { 
