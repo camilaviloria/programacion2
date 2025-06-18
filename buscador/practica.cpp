@@ -10,7 +10,7 @@ struct Producto {
     char Nombre[30];
     int Precio;
     int Stock;
-    char Categoria;
+    char Categoria[30];
     bool Activo;
 };
 
@@ -30,7 +30,7 @@ void agregarProducto() {
     cout << "Precio: "; cin >> p.Precio; limpiarBuffer();
     cout << "Stock: "; cin >> p.Stock; limpiarBuffer();
     cout << "Categoria: "; cin >> p.Categoria; limpiarBuffer();
-    cout << "Activo o no: "; cin >> p.Activo; limpiarBuffer();
+    cout << "Activo o no (1 para activo, 0 para inactivo): "; cin >> p.Activo; limpiarBuffer(); 
 
     archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
     archivo.close();
@@ -40,7 +40,7 @@ void agregarProducto() {
 void mostrarDatosProducto(const Producto& p) {
     cout << "Codigo: " << p.Codigo << ", Nombre: " << p.Nombre
               << ", Precio: " << p.Precio << ", Stock: " << p.Stock
-              << ", Categoria: " << p.Categoria << ", Activo o no: " << p.Activo << endl;
+              << ", Categoria: " << p.Categoria << ", Activo o no: " << (p.Activo ? "Si" : "No") << endl;
 }
 
 void mostrarProducto() {
@@ -53,4 +53,37 @@ void mostrarProducto() {
         mostrarDatosProducto(p);
     }
     archivo.close();
+}
+int main() {
+    int opcion;
+    do {
+        cout << "\n--- MENU DE PRODUCTOS ---" << endl;
+        cout << "1. Agregar Producto\n";
+        cout << "2. Mostrar Productos\n";
+        cout << "0. Salir\n";
+        cout << "Ingrese su opcion: ";
+        while (!(cin >> opcion)) { 
+            cout << "Entrada invalida. Ingrese un numero: ";
+            cin.clear();
+            limpiarBuffer();
+        }
+        limpiarBuffer(); 
+
+        switch (opcion) {
+            case 1:
+                agregarProducto();
+                break;
+            case 2:
+                mostrarProducto();
+                break;
+            case 0:
+                cout << "Saliendo del programa." << endl;
+                break;
+            default:
+                cout << "Opcion no valida. Intente de nuevo." << endl;
+                break;
+        }
+    } while (opcion != 0);
+
+    return 0; 
 }
