@@ -1,7 +1,8 @@
-#include <iostream> 
-#include <fstream>  
+#include <iostream>  
+#include <fstream>   
 #include <string>   
 #include <limits>    
+#include <cstring>   
 
 using namespace std;
 
@@ -14,18 +15,19 @@ struct Producto {
     bool Activo;
 };
 
-const string producto = "producto.bin";
+const string PRODUCTO_FILE = "producto.bin"; 
 
 void limpiarBuffer() {
-    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-};
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
 void mostrarDatosProducto(const Producto& p) {
     cout << "Codigo: " << p.Codigo << ", Nombre: " << p.Nombre
               << ", Precio: " << p.Precio << ", Stock: " << p.Stock
-              << ", Categoria: " << p.Categoria << ", Activo o no: " << (p.Activo ? "Si" : "No") << endl;
+              << ", Categoria: " << p.Categoria << ", Activo: " << (p.Activo ? "Si" : "No") << endl;
 }
 bool CodigoExistente(int codigoBuscado) {
-    ifstream archivo(producto, ios::binary);
+    ifstream archivo(PRODUCTO_FILE, ios::binary);
     if (!archivo.is_open()) {
         return false;
     }
@@ -41,7 +43,7 @@ bool CodigoExistente(int codigoBuscado) {
     return false; 
 }
 void agregarProducto() {
-    ofstream archivo(producto, ios::binary | ios::app);
+    ofstream archivo(PRODUCTO_FILE, ios::binary | ios::app);
     if (!archivo.is_open()) { cerr << "Error al abrir archivo." << endl; return; }
 
     Producto p;
@@ -50,7 +52,7 @@ void agregarProducto() {
     limpiarBuffer();
 
     if (CodigoExistente(p.Codigo)) {
-        cout << "Ya existe un producto con el codigo " << p.Codigo << ". No se puede agregar." << endl;
+        cout << "Ya existe un producto con el codigo" << p.Codigo << endl;
         archivo.close(); 
         return;
     }
@@ -63,11 +65,11 @@ void agregarProducto() {
 
     archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
     archivo.close();
-    cout << "Producto agregado exitosamente." << endl;
+    cout << "Producto agregado." << endl;
 }
 
 void mostrarProductoActivos() {
-    ifstream archivo(producto, ios::binary);
+    ifstream archivo(PRODUCTO_FILE, ios::binary);
     if (!archivo.is_open()) { cerr << "No hay productos." << endl; return; }
 
     Producto p;
@@ -85,9 +87,8 @@ void mostrarProductoActivos() {
         cout << "No se encontraron productos activos." << endl;
     }
 }
-
 void mostrarProductoCategoria() {
-    ifstream archivo(producto, ios::binary);
+    ifstream archivo(PRODUCTO_FILE, ios::binary);
     if (!archivo.is_open()) { cerr << "No hay productos para buscar." << endl; return; }
 
     char categoriaBuscada;
@@ -113,7 +114,7 @@ void mostrarProductoCategoria() {
 }
 
 void buscarProductoCodigo() {
-    ifstream archivo(producto, ios::binary);
+    ifstream archivo(PRODUCTO_FILE, ios::binary);
     if (!archivo.is_open()) { cerr << "No hay productos para buscar." << endl; return; }
 
     int codigoBuscado;
@@ -132,48 +133,135 @@ void buscarProductoCodigo() {
     if (!encontrado) { cout << "codigo no encontrado." << endl; }
     archivo.close();
 }
+
 void editarProducto() {
-    fstream archivo(producto, ios::binary | ios::in | ios::out);
+    fstream archivo(PRODUCTO_FILE, ios::binary | ios::in | ios::out);
     if (!archivo.is_open()) { cerr << "No hay productos para editar." << endl; return; }
 
     int codigoeditar;
-    cout << "codigo a editar: "; cin >> codigoeditar; limpiarBuffer();
+    cout << "Codigo a editar: "; cin >> codigoeditar; limpiarBuffer();
 
     Producto p;
     bool encontrada = false;
-    long posActual = 0;
+    long pos_inicio_registro = 0; 
 
     while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
         if (codigoeditar == p.Codigo) {
             encontrada = true;
-            cout << "Producto encontrado. Nuevos datos:\n";
-            cout << "precio (" << p.Precio << "): "; cin >> p.Precio;
-            cout << "categoria (" << p.Categoria << "): "; cin >> p.Categoria; limpiarBuffer();
-            cout << "stock (" << p.Stock << "): "; cin >> p.Stock; limpiarBuffer();
+            cout << "Nuevos datos:\n";
+            
+            cout << "Precio actual (" << p.Precio << "): ";
+            while (!(cin >> p.Precio)) { 
+                cout << "Entrada invalida. Ingrese un numero para el Precio: ";
+                cin.clear();
+                limpiarBuffer();
+            }
+            limpiarBuffer();
 
-            archivo.seekp(posActual); 
+            cout << "Categoria actual (" << p.Categoria << "): "; cin >> p.Categoria; limpiarBuffer();
+
+            cout << "Stock actual (" << p.Stock << "): ";
+            while (!(cin >> p.Stock)) { 
+                cout << "Entrada invalida. Ingrese un numero para el Stock: ";
+                cin.clear();
+                limpiarBuffer();
+            }
+            limpiarBuffer();
+
+            archivo.seekp(pos_inicio_registro); 
             archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
             cout << "Datos actualizados." << endl;
-            break;
+            break; 
         }
-        posActual = archivo.tellg(); 
-    }
-    if (!encontrada) { cout << "codigo no encontrado para editar." << endl; }
+        pos_inicio_registro = archivo.tellg();
+}
+    if (!encontrada) { cout << "Codigo no encontrado para editar." << endl; }
     archivo.close();
 }
 
+void eliminarProducto() { 
+    fstream archivo(PRODUCTO_FILE, ios::binary | ios::in | ios::out);
+    if (!archivo.is_open()) { cerr << "No hay productos para eliminar" << endl; return; }
 
+    int codigoEliminar;
+    cout << "Ingrese el codigo del producto a eliminar: ";
+    cin >> codigoEliminar;
+    limpiarBuffer();
+
+    Producto p;
+    bool encontrado = false;
+    long pos_inicio_registro = 0; 
+
+    while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
+        if (p.Codigo == codigoEliminar) {
+            encontrado = true;
+            if (!p.Activo) { 
+                cout << "El producto " << codigoEliminar << " ya esta inactivo." << endl;
+                break; 
+            }
+            p.Activo = false;             
+            archivo.seekp(pos_inicio_registro); 
+            archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
+            cout << "Producto con codigo " << codigoEliminar << " marcado como inactivo" << endl;
+            break; 
+        }
+        pos_inicio_registro = archivo.tellg(); 
+    }
+
+    if (!encontrado) {
+        cout << "Producto " << codigoEliminar << " no encontrado." << endl;
+    }
+
+    archivo.close(); 
+}
+void recuperarProducto() { 
+    fstream archivo(PRODUCTO_FILE, ios::binary | ios::in | ios::out);
+    if (!archivo.is_open()) { cerr << "No hay productos para recuperar." << endl; return; }
+
+    int codigoRecuperar;
+    cout << "Ingrese el codigo del producto a recuperar: ";
+    cin >> codigoRecuperar;
+    limpiarBuffer();
+
+    Producto p;
+    bool encontrado = false;
+    long pos_inicio_registro = 0; 
+
+    while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
+        if (p.Codigo == codigoRecuperar) {
+            encontrado = true;
+            if (p.Activo) {  
+                cout << "El producto " << codigoRecuperar << " ya esta activo." << endl;
+                break; 
+            }p.Activo = true; 
+            archivo.seekp(pos_inicio_registro);
+            archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
+            cout << "Producto con codigo " << codigoRecuperar << " marcado como activo." << endl;
+            break;
+        }
+        pos_inicio_registro = archivo.tellg();
+    }
+
+    if (!encontrado) {
+        cout << "Producto con codigo " << codigoRecuperar << " no encontrado." << endl;
+    }
+
+    archivo.close();
+}
 int main() {
     int opcion;
     do {
         cout << "\n--- MENU DE PRODUCTOS ---" << endl;
         cout << "1. Agregar Producto\n";
-        cout << "2. Mostrar Productos Activos\n"; 
-        cout << "3. Mostrar Productos Por Categoria\n"; 
-        cout << "4. Buscar Productos Por Codigo\n"; 
-        cout << "5. Editar Productos\n"; 
+        cout << "2. Mostrar Productos Activos\n";
+        cout << "3. Mostrar Productos Por Categoria\n";
+        cout << "4. Buscar Productos Por Codigo\n";
+        cout << "5. Editar Productos\n";
+        cout << "6. Eliminar Producto\n";
+        cout << "7. Recuperar Producto\n";
         cout << "0. Salir\n";
         cout << "Ingrese su opcion: ";
+
         while (!(cin >> opcion)) { 
             cout << "Entrada invalida. Ingrese un numero: ";
             cin.clear();
@@ -182,21 +270,13 @@ int main() {
         limpiarBuffer(); 
 
         switch (opcion) {
-            case 1:
-                agregarProducto();
-                break;
-            case 2:
-                mostrarProductoActivos();
-                break;
-            case 3:
-                mostrarProductoCategoria();
-                break;
-            case 4:
-                buscarProductoCodigo();
-                break;
-            case 5:
-                editarProducto();
-                break;
+            case 1: agregarProducto(); break;
+            case 2: mostrarProductoActivos(); break;
+            case 3: mostrarProductoCategoria(); break;
+            case 4: buscarProductoCodigo(); break;
+            case 5: editarProducto(); break;
+            case 6: eliminarProducto(); break; 
+            case 7: recuperarProducto(); break; 
             case 0:
                 cout << "Saliendo del programa." << endl;
                 break;
@@ -205,6 +285,5 @@ int main() {
                 break;
         }
     } while (opcion != 0);
-
     return 0; 
 }
