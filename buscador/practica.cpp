@@ -132,6 +132,36 @@ void buscarProductoCodigo() {
     if (!encontrado) { cout << "codigo no encontrado." << endl; }
     archivo.close();
 }
+void editarProducto() {
+    fstream archivo(producto, ios::binary | ios::in | ios::out);
+    if (!archivo.is_open()) { cerr << "No hay productos para editar." << endl; return; }
+
+    int codigoeditar;
+    cout << "codigo a editar: "; cin >> codigoeditar; limpiarBuffer();
+
+    Producto p;
+    bool encontrada = false;
+    long posActual = 0;
+
+    while (archivo.read(reinterpret_cast<char*>(&p), sizeof(Producto))) {
+        if (codigoeditar == p.Codigo) {
+            encontrada = true;
+            cout << "Producto encontrado. Nuevos datos:\n";
+            cout << "precio (" << p.Precio << "): "; cin >> p.Precio;
+            cout << "categoria (" << p.Categoria << "): "; cin >> p.Categoria; limpiarBuffer();
+            cout << "stock (" << p.Stock << "): "; cin >> p.Stock; limpiarBuffer();
+
+            archivo.seekp(posActual); 
+            archivo.write(reinterpret_cast<const char*>(&p), sizeof(Producto));
+            cout << "Datos actualizados." << endl;
+            break;
+        }
+        posActual = archivo.tellg(); 
+    }
+    if (!encontrada) { cout << "codigo no encontrado para editar." << endl; }
+    archivo.close();
+}
+
 
 int main() {
     int opcion;
@@ -141,6 +171,7 @@ int main() {
         cout << "2. Mostrar Productos Activos\n"; 
         cout << "3. Mostrar Productos Por Categoria\n"; 
         cout << "4. Buscar Productos Por Codigo\n"; 
+        cout << "5. Editar Productos\n"; 
         cout << "0. Salir\n";
         cout << "Ingrese su opcion: ";
         while (!(cin >> opcion)) { 
@@ -160,8 +191,11 @@ int main() {
             case 3:
                 mostrarProductoCategoria();
                 break;
-                case 4:
+            case 4:
                 buscarProductoCodigo();
+                break;
+            case 5:
+                editarProducto();
                 break;
             case 0:
                 cout << "Saliendo del programa." << endl;
