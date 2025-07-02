@@ -2,7 +2,6 @@
 #include <fstream>   
 #include <string>   
 #include <limits>    
-#include <cstring>   
 
 using namespace std;
 
