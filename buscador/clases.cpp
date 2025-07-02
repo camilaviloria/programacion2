@@ -27,12 +27,12 @@ class Publicacion{
     }
 
     virtual void mostrarInfo() const {
-        cout << "--- Informacion de la Publicacion ---" << std::endl;
-        cout << "Titulo: " << titulo << std::endl;
-        cout << "Autor: " << autor << std::endl;
-        cout << "Año de Publicacion: " << anioPublicacion << std::endl;
+        cout << "--- Informacion de la Publicacion ---" << endl;
+        cout << "Titulo: " << titulo << endl;
+        cout << "Autor: " << autor << endl;
+        cout << "Año de Publicacion: " << anioPublicacion << endl;
     }
-    virtual std::string getTipo() const = 0;
+    virtual string getTipo() const = 0;
 
 };
 
