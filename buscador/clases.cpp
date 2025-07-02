@@ -32,6 +32,13 @@ class Publicacion{
         cout << "Autor: " << autor << std::endl;
         cout << "Año de Publicacion: " << anioPublicacion << std::endl;
     }
-    virtual string getTipo() const = 0;
+    virtual std::string getTipo() const = 0;
 
 };
+
+int main() {
+    cout << "Iniciando el programa de gestion de publicaciones..." << endl;
+
+    cout << "Programa finalizado." << endl;
+    return 0; 
+}
