@@ -1,5 +1,6 @@
 #include <iostream>
 #include <locale>
+#include <vector>
 
 using namespace std;
 
@@ -34,6 +35,63 @@ class Publicacion{
     }
     virtual string getTipo() const = 0;
 
+};
+class Libro : private Publicacion{
+    private:
+    int numPaginas;
+
+    public: 
+    Libro(const string& titulo, const string& autor, int anioPublicacion, int numPaginas)
+        : Publicacion(titulo, autor, anioPublicacion), numPaginas(numPaginas) {
+
+        }
+        void mostrarInfo() {
+        Publicacion::mostrarInfo(); 
+        cout << ", Paginas: " << numPaginas << endl;
+    }
+    string getTipo() {
+        return "Libro";
+    }
+      
+};
+class Revista : public Publicacion {
+private:
+    int numeroEdicion; 
+
+public:
+    Revista(const string& titulo, const string& autor, int anioPublicacion, int numeroEdicion)
+        : Publicacion(titulo, autor, anioPublicacion), numeroEdicion(numeroEdicion) {
+    }
+
+    void mostrarInfo() { 
+        Publicacion::mostrarInfo(); 
+        cout << ", Edicion: " << numeroEdicion << std::endl;
+    }
+
+    string getTipo() { 
+        return "Revista"; 
+    }
+};
+class Periodico : public Publicacion {
+private:
+    string fechaPublicacion; 
+    string ciudadPublicacion;
+
+public:
+    Periodico(const string& titulo, const string& autor, int anioPublicacion, string fechaPublicacion, string ciudadPublicacion)
+        : Publicacion(titulo, autor, anioPublicacion), fechaPublicacion(fechaPublicacion), ciudadPublicacion(ciudadPublicacion) {
+    }
+
+    void mostrarInfo() { 
+        Publicacion::mostrarInfo(); 
+        cout << ", Edicion: " << fechaPublicacion << endl;
+        cout << ", Edicion: " << ciudadPublicacion << endl;
+
+    }
+
+    string getTipo() { 
+        return "Periodico"; 
+    }
 };
 
 int main() {
