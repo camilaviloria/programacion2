@@ -1,9 +1,9 @@
-#include <iostream> // Para entrada/salida (cout, cin)
-#include <string>   // Para usar el tipo de dato string
-#include <vector>   // Para usar std::vector como el catálogo
-#include <limits>   // Para numeric_limits (limpiar buffer)
-#include <algorithm> // Para std::transform y std::tolower (busqueda case-insensitive)
-#include <cctype>   // Para std::tolower
+#include <iostream> 
+#include <string>   
+#include <vector>   
+#include <limits>  
+#include <algorithm> 
+#include <cctype>   
 
 using namespace std;
 
@@ -157,12 +157,12 @@ void agregarPublicacion() {
     int anioPublicacion;
     Publicacion* nuevaPublicacion = nullptr;
 
-    if (tipoSeleccionado >= 1 && tipoSeleccionado <= 3) { // Request common data only if option is valid
+    if (tipoSeleccionado >= 1 && tipoSeleccionado <= 3) { 
         cout << "\n--- Datos Comunes de la Publicacion ---" << endl;
         titulo = obtenerEntradaNoVacia("Titulo: ");
         autor = obtenerEntradaNoVacia("Autor: ");
         anioPublicacion = obtenerEntero("Anio de Publicacion (1500-2025): ");
-        while (anioPublicacion < 1500 || anioPublicacion > 2025) { // Year validation
+        while (anioPublicacion < 1500 || anioPublicacion > 2025) { 
              cout << "Año invalido. Debe estar entre 1500 y 2025." << endl;
              anioPublicacion = obtenerEntero("Anio de Publicacion (1500-2025): ");
         }
@@ -172,31 +172,31 @@ void agregarPublicacion() {
         case 1: { // Libro
             cout << "\n--- Datos Especificos del Libro ---" << endl;
             int numPaginas = obtenerEntero("Numero de Paginas: ");
-            while (numPaginas <= 0) { // Page count validation
+            while (numPaginas <= 0) { 
                 cout << "El numero de paginas debe ser mayor que 0." << endl;
                 numPaginas = obtenerEntero("Numero de Paginas: ");
             }
             nuevaPublicacion = new Libro(titulo, autor, anioPublicacion, numPaginas);
             break;
         }
-        case 2: { // Revista
+        case 2: { 
             cout << "\n--- Datos Especificos de la Revista ---" << endl;
             int numeroEdicion = obtenerEntero("Numero de Edicion: ");
-            while (numeroEdicion <= 0) { // Edition number validation
+            while (numeroEdicion <= 0) { 
                 cout << "El numero de edicion debe ser mayor que 0." << endl;
                 numeroEdicion = obtenerEntero("Numero de Edicion: ");
             }
             nuevaPublicacion = new Revista(titulo, autor, anioPublicacion, numeroEdicion);
             break;
         }
-        case 3: { // Periodico
+        case 3: { 
             cout << "\n--- Datos Especificos del Periodico ---" << endl;
-            string fechaPublicacion = obtenerEntradaNoVacia("Fecha de Publicacion (ej. '03/07/2025'): ");
+            string fechaPublicacion = obtenerEntradaNoVacia("Fecha de Publicacion: ");
             string ciudadPublicacion = obtenerEntradaNoVacia("Ciudad de Publicacion: ");
             nuevaPublicacion = new Periodico(titulo, autor, anioPublicacion, fechaPublicacion, ciudadPublicacion);
             break;
         }
-        case 4: { // Cancel
+        case 4: { 
             cout << "Operacion cancelada." << endl;
             return;
         }
