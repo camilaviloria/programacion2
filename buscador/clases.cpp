@@ -39,7 +39,7 @@ class Publicacion{
     virtual string getTipo() const = 0;
 
 };
-class Libro : private Publicacion{
+class Libro : public Publicacion{
     private:
     int numPaginas;
 
@@ -48,11 +48,11 @@ class Libro : private Publicacion{
         : Publicacion(titulo, autor, anioPublicacion), numPaginas(numPaginas) {
 
         }
-        void mostrarInfo() {
+        void mostrarInfo() const {
         Publicacion::mostrarInfo(); 
         cout << ", Paginas: " << numPaginas << endl;
     }
-    string getTipo() {
+    string getTipo() const {
         return "Libro";
     }
       
@@ -66,12 +66,12 @@ public:
         : Publicacion(titulo, autor, anioPublicacion), numeroEdicion(numeroEdicion) {
     }
 
-    void mostrarInfo() { 
+    void mostrarInfo() const { 
         Publicacion::mostrarInfo(); 
         cout << ", Edicion: " << numeroEdicion << endl;
     }
 
-    string getTipo() { 
+    string getTipo() const { 
         return "Revista"; 
     }
 };
@@ -85,14 +85,14 @@ public:
         : Publicacion(titulo, autor, anioPublicacion), fechaPublicacion(fechaPublicacion), ciudadPublicacion(ciudadPublicacion) {
     }
 
-    void mostrarInfo() { 
+    void mostrarInfo() const { 
         Publicacion::mostrarInfo(); 
         cout << ", Edicion: " << fechaPublicacion << endl;
         cout << ", Edicion: " << ciudadPublicacion << endl;
 
     }
 
-    string getTipo() { 
+    string getTipo() const { 
         return "Periodico"; 
     }
 };
@@ -104,7 +104,7 @@ bool validarEntero(const string& str, int& valor) {
         if (pos == str.length()) {
             return true;
         } else {
-            cerr << "Error: Entrada no es un entero puro. Hay caracteres adicionales." << endl;
+            cerr << "Entrada no es un entero puro." << endl;
             return false;
         }
     } catch (const out_of_range& oor) {
@@ -158,7 +158,7 @@ void agregarPublicacion() {
     Publicacion* nuevaPublicacion = nullptr;
 
     if (tipoSeleccionado >= 1 && tipoSeleccionado <= 3) { 
-        cout << "\n--- Datos Comunes de la Publicacion ---" << endl;
+        cout << "\n--- Datos de la Publicacion ---" << endl;
         titulo = obtenerEntradaNoVacia("Titulo: ");
         autor = obtenerEntradaNoVacia("Autor: ");
         anioPublicacion = obtenerEntero("Anio de Publicacion (1500-2025): ");
