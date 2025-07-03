@@ -169,7 +169,7 @@ void agregarPublicacion() {
     }
 
     switch (tipoSeleccionado) {
-        case 1: { // Libro
+        case 1: { 
             cout << "\n--- Datos Especificos del Libro ---" << endl;
             int numPaginas = obtenerEntero("Numero de Paginas: ");
             while (numPaginas <= 0) { 
@@ -210,4 +210,51 @@ void agregarPublicacion() {
         catalogoPublicaciones.push_back(nuevaPublicacion);
         cout << "Publicacion '" << nuevaPublicacion->getTitulo() << "' de tipo '" << nuevaPublicacion->getTipo() << "' agregada al catalogo." << endl;
     }
+}
+
+void mostrarCatalogo() {
+    if (catalogoPublicaciones.empty()) {
+        cout << "\nEl catalogo esta vacio." << endl;
+        return;
+    }
+    cout << "\n--- Catalogo de Publicaciones ---" << endl;
+    for (size_t i = 0; i < catalogoPublicaciones.size(); ++i) {
+        cout << "\n--- Publicacion #" << (i + 1) << " (" << catalogoPublicaciones[i]->getTipo() << ") ---" << endl; 
+        catalogoPublicaciones[i]->mostrarInfo(); 
+    }
+}
+
+void buscarPublicacionPorTitulo() { 
+    cout << "\n--- BUSCAR PUBLICACION POR TITULO ---" << endl;
+    if (catalogoPublicaciones.empty()) {
+        cout << "El catalogo esta vacio. No hay nada que buscar." << endl;
+        return;
+    }
+
+    string tituloBuscado = obtenerEntradaNoVacia("Ingrese el titulo a buscar: ");
+
+    bool encontrado = false;
+    cout << "\n--- RESULTADOS DE LA BUSQUEDA ---" << endl;
+    
+    size_t i = 0; 
+    while (i < catalogoPublicaciones.size()) { 
+        const Publicacion* pub = catalogoPublicaciones[i];
+        string tituloActual = pub->getTitulo(); 
+        if (tituloActual.find(tituloBuscado) != string::npos) {
+            pub->mostrarInfo();
+            cout << "------------------------------------" << endl;
+            encontrado = true;
+        }
+        i++; 
+    }
+
+    if (!encontrado) {
+        cout << "No se encontraron publicaciones con ese titulo." << endl;
+    }
+}
+int main() {
+    cout << "Iniciando el programa de gestion de publicaciones" << endl;
+
+    cout << "Programa finalizado." << endl;
+    return 0; 
 }
