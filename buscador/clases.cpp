@@ -287,6 +287,56 @@ void eliminarPublicacion() {
         cout << "Numero de publicacion invalido." << endl;
     }
 }
+void mostrarEstadisticas() { 
+    cout << "\n--- ESTADISTICAS DEL CATALOGO ---" << endl;
+    if (catalogoPublicaciones.empty()) {
+        cout << "El catalogo esta vacio." << endl;
+        return;
+    }
+
+    int totalPublicaciones = catalogoPublicaciones.size();
+    int totalLibros = 0;
+    int totalRevistas = 0;
+    int totalPeriodicos = 0; 
+    int anioMasAntiguo = 9999; 
+    int anioMasReciente = 0; 
+    string tituloMasAntiguo = "N/A";
+
+    for (size_t i = 0; i < catalogoPublicaciones.size(); ++i) {
+        const Publicacion* pub = catalogoPublicaciones[i]; 
+        if (pub->getTipo() == "Libro") {
+            totalLibros++;
+        } else if (pub->getTipo() == "Revista") {
+            totalRevistas++;
+        } else if (pub->getTipo() == "Periodico") { 
+            totalPeriodicos++;
+        }
+
+        if (pub->getAnioPublicacion() < anioMasAntiguo) {
+            anioMasAntiguo = pub->getAnioPublicacion();
+            tituloMasAntiguo = pub->getTitulo(); 
+        }
+        if (pub->getAnioPublicacion() > anioMasReciente) { 
+            anioMasReciente = pub->getAnioPublicacion();
+        }
+    }
+
+    cout << "Total de publicaciones: " << totalPublicaciones << endl;
+    cout << "Cantidad de Libros: " << totalLibros << endl;
+    cout << "Cantidad de Revistas: " << totalRevistas << endl;
+    cout << "Cantidad de Periodicos: " << totalPeriodicos << endl; 
+    cout << "Publicacion mas antigua: '" << tituloMasAntiguo << "' Año: " << anioMasAntiguo << endl;
+    cout << "Año de publicacion mas reciente: " << anioMasReciente << endl; 
+}
+void liberarTodaMemoria() { 
+
+for (size_t i = 0; i < catalogoPublicaciones.size(); ++i) { 
+        delete catalogoPublicaciones[i]; 
+    }
+    catalogoPublicaciones.clear(); 
+    cout << "Toda la memoria ha sido liberada." << endl;
+}
+
 int main() {
     cout << "Iniciando el programa de gestion de publicaciones" << endl;
 
