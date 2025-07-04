@@ -252,6 +252,41 @@ void buscarPublicacionPorTitulo() {
         cout << "No se encontraron publicaciones con ese titulo." << endl;
     }
 }
+void eliminarPublicacion() {
+    if (catalogoPublicaciones.empty()) {
+        cout << "\nEl catalogo esta vacio. No hay publicaciones para eliminar." << endl;
+        return;
+    }
+
+    mostrarCatalogo(); 
+
+    int indiceEliminar = obtenerEntero("Ingrese el numero de la publicacion a eliminar: ");
+
+    if (indiceEliminar == 0) {
+        cout << "Eliminacion cancelada." << endl;
+        return;
+    }
+
+    int realIndice = indiceEliminar - 1;
+
+    if (realIndice >= 0 && realIndice < catalogoPublicaciones.size()) {
+        cout << "¿Esta seguro de eliminar la siguiente publicacion? (s/n)" << endl;
+        catalogoPublicaciones[realIndice]->mostrarInfo();
+        string confirmacion = obtenerEntradaNoVacia("Confirmar (s/n): ");
+
+        transform(confirmacion.begin(), confirmacion.end(), confirmacion.begin(), ::tolower);
+
+        if (confirmacion == "s") {
+            delete catalogoPublicaciones[realIndice];
+            catalogoPublicaciones.erase(catalogoPublicaciones.begin() + realIndice); 
+            cout << "Publicacion eliminada exitosamente." << endl;
+        } else {
+            cout << "Eliminacion cancelada." << endl;
+        }
+    } else {
+        cout << "Numero de publicacion invalido." << endl;
+    }
+}
 int main() {
     cout << "Iniciando el programa de gestion de publicaciones" << endl;
 
