@@ -87,8 +87,8 @@ public:
 
     void mostrarInfo() const { 
         Publicacion::mostrarInfo(); 
-        cout << ", Edicion: " << fechaPublicacion << endl;
-        cout << ", Edicion: " << ciudadPublicacion << endl;
+        cout << ", fecha: " << fechaPublicacion << endl;
+        cout << ", ciudad: " << ciudadPublicacion << endl;
 
     }
 
@@ -96,6 +96,10 @@ public:
         return "Periodico"; 
     }
 };
+
+void limpiarBuffer() {
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
 
 bool validarEntero(const string& str, int& valor) {
     try {
@@ -107,13 +111,14 @@ bool validarEntero(const string& str, int& valor) {
             cerr << "Entrada no es un entero puro." << endl;
             return false;
         }
-    } catch (const out_of_range& oor) {
-        cerr << "Error: Numero fuera de rango para un entero." << endl;
-        return false;
-    } catch (const invalid_argument& ia) {
-        cerr << "Error: Entrada no es un numero valido." << endl;
-        return false;
-    }
+        }catch (const out_of_range& oor) {
+            cerr << "Error: Numero fuera de rango para un entero." << endl;
+            return false;
+            }
+            catch (const invalid_argument& ia) {
+                cerr << "Error: Entrada no es un numero valido." << endl;
+                return false;
+                }
 }
 
 string obtenerEntradaNoVacia(const string& prompt) {
@@ -153,7 +158,8 @@ void agregarPublicacion() {
 
     int tipoSeleccionado = obtenerEntero("Ingrese su opcion: ");
 
-    string titulo, autor;
+    string titulo; 
+    string autor;
     int anioPublicacion;
     Publicacion* nuevaPublicacion = nullptr;
 
@@ -219,7 +225,7 @@ void mostrarCatalogo() {
     }
     cout << "\n--- Catalogo de Publicaciones ---" << endl;
     for (size_t i = 0; i < catalogoPublicaciones.size(); ++i) {
-        cout << "\n--- Publicacion #" << (i + 1) << " (" << catalogoPublicaciones[i]->getTipo() << ") ---" << endl; 
+        cout << "\n--- Publicacion: " << (i + 1) << " (" << catalogoPublicaciones[i]->getTipo() << ") ---" << endl; 
         catalogoPublicaciones[i]->mostrarInfo(); 
     }
 }
@@ -227,7 +233,7 @@ void mostrarCatalogo() {
 void buscarPublicacionPorTitulo() { 
     cout << "\n--- BUSCAR PUBLICACION POR TITULO ---" << endl;
     if (catalogoPublicaciones.empty()) {
-        cout << "El catalogo esta vacio. No hay nada que buscar." << endl;
+        cout << "El catalogo esta vacio." << endl;
         return;
     }
 
@@ -279,7 +285,7 @@ void eliminarPublicacion() {
         if (confirmacion == "s") {
             delete catalogoPublicaciones[realIndice];
             catalogoPublicaciones.erase(catalogoPublicaciones.begin() + realIndice); 
-            cout << "Publicacion eliminada exitosamente." << endl;
+            cout << "Publicacion eliminada." << endl;
         } else {
             cout << "Eliminacion cancelada." << endl;
         }
@@ -338,8 +344,45 @@ for (size_t i = 0; i < catalogoPublicaciones.size(); ++i) {
 }
 
 int main() {
-    cout << "Iniciando el programa de gestion de publicaciones" << endl;
+    int opcion;
+    do {
+        cout << "\n===== SISTEMA DE GESTION DE BIBLIOTECA =====" << endl;
+        cout << "1. Agregar nueva publicacion" << endl;
+        cout << "2. Mostrar todas las publicaciones" << endl;
+        cout << "3. Buscar publicacion por titulo" << endl;
+        cout << "4. Eliminar publicacion" << endl;
+        cout << "5. Mostrar estadisticas" << endl;
+        cout << "6. Salir del programa" << endl; 
+        cout << "Seleccione una opcion: ";
+        if (!(cin >> opcion)) { 
+            cout << "Entrada invalida. Ingrese un numero: ";
+            cin.clear();
+            limpiarBuffer();
+        }
+        switch (opcion) {
+            case 1: agregarPublicacion(); break; 
+            case 2: mostrarCatalogo(); break;
+            case 3: buscarPublicacionPorTitulo(); break;
+            case 4: eliminarPublicacion(); break;
+            case 5: mostrarEstadisticas(); break;
+            case 6: 
+                cout << "¿Esta seguro que desea salir? Toda la memoria sera liberada. (s/n): ";
+                char confirmacion;
+                cin >> confirmacion;
+                limpiarBuffer();
+                if (tolower(confirmacion) == 's') {
+                    liberarTodaMemoria(); 
+                    cout << "Saliendo del programa" << endl;
+                    opcion = 0; 
+                } else {
+                    opcion = -1; 
+                }
+                break;
+            default:
+                cout << "Opcion no valida." << endl;
+                break;
+        }
+    } while (opcion != 0); 
 
-    cout << "Programa finalizado." << endl;
-    return 0; 
+    return 0;
 }
