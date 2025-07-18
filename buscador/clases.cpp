@@ -36,7 +36,7 @@ class Publicacion{
         cout << "Autor: " << autor << endl;
         cout << "Año de Publicacion: " << anioPublicacion << endl;
     }
-    virtual string getTipo() const = 0;
+    virtual string getTipo() const = 0;   
 
 };
 class Libro : public Publicacion{
@@ -273,7 +273,7 @@ void eliminarPublicacion() {
         return;
     }
 
-    int realIndice = indiceEliminar - 1;
+    int realIndice = indiceEliminar - 1; 
 
     if (realIndice >= 0 && realIndice < catalogoPublicaciones.size()) {
         cout << "¿Esta seguro de eliminar la siguiente publicacion? (s/n)" << endl;
@@ -283,7 +283,7 @@ void eliminarPublicacion() {
         transform(confirmacion.begin(), confirmacion.end(), confirmacion.begin(), ::tolower);
 
         if (confirmacion == "s") {
-            delete catalogoPublicaciones[realIndice];
+            delete catalogoPublicaciones[realIndice]; 
             catalogoPublicaciones.erase(catalogoPublicaciones.begin() + realIndice); 
             cout << "Publicacion eliminada." << endl;
         } else {

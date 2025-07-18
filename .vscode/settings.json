@@ -4,5 +4,6 @@
         "*.txt": "pip-requirements",
         "iostream": "cpp",
         "iosfwd": "cpp"
-    }
+    },
+    "svn.ignoreMissingSvnWarning": true
 }
