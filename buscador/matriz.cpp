@@ -95,7 +95,7 @@ Matriz::Matriz() : datos(nullptr), filas(0), columnas(0) {
 
 Matriz::Matriz(int f, int c) : datos(nullptr), filas(f), columnas(c) {
     if (f <= 0 || c <= 0) {
-        throw std::runtime_error("Matrix dimensions must be positive.");
+        throw std::runtime_error("Matriz debe ser positiva");
     }
     datos = new double*[filas];
     for (int i = 0; i < filas; ++i) {
@@ -124,24 +124,24 @@ Matriz::~Matriz() {
 
 void Matriz::llenarMatriz() {
     if (filas == 0 || columnas == 0) {
-        std::cout << "The matrix is empty. Cannot fill data." << std::endl;
+        std::cout << "la matriz esta vacia" << std::endl;
         return;
     }
-    std::cout << "\n--- Fill Matrix (" << filas << "x" << columnas << ") ---" << std::endl;
+    std::cout << "\n--- Fila (" << filas << "x" << columnas << ") ---" << std::endl;
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas; ++j) {
-            datos[i][j] = obtenerDoubleValido("Enter value for [" + std::to_string(i) + "][" + std::to_string(j) + "]: ");
+            datos[i][j] = obtenerDoubleValido("Entrada [" + std::to_string(i) + "][" + std::to_string(j) + "]: ");
         }
     }
-    std::cout << "Matrix filled successfully." << std::endl;
+    std::cout << "Matriz exitosa" << std::endl;
 }
 
 void Matriz::mostrarMatriz() const {
     if (filas == 0 || columnas == 0) {
-        std::cout << "The matrix is empty." << std::endl;
+        std::cout << "la matriz esta vacia." << std::endl;
         return;
     }
-    std::cout << "\n--- Matrix (" << filas << "x" << columnas << ") ---" << std::endl;
+    std::cout << "\n--- Matriz (" << filas << "x" << columnas << ") ---" << std::endl;
     int max_width = 0;
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas; ++j) {
@@ -184,7 +184,7 @@ double Matriz::determinante() const {
     if (filas != columnas) {
         throw std::runtime_error("no se puede calcular el determinante.");
     }
-    return calcularDeterminanteCofactores(filas, columnas);
+    return calcularDeterminanteCofactores(datos, columnas);
 }
 
 Matriz Matriz::suma(const Matriz& otra) const {
