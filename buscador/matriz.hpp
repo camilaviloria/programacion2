@@ -1,4 +1,3 @@
-// Matriz.hpp (Corregido)
 #ifndef MATRIZ_HPP
 #define MATRIZ_HPP
 
