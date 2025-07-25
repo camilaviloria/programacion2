@@ -1,147 +1,184 @@
+#include <iostream> 
+#include <string>    
+#include <limits>    
+#include <stdexcept>
 #include "matriz.hpp"    
 #include "MatrizLib.hpp" 
-#include <iostream>
-#include <limits> 
 
-void limpiarBufferMain() {
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+using namespace MatrizLib;
+
+bool validarEntero(const std::string& str, int& valor) {
+    try {
+        size_t pos;
+        valor = std::stoi(str, &pos); 
+        if (pos == str.length()) { 
+            return true; 
+        } else {
+            std::cerr << "Error: Entrada no es un entero." << std::endl;
+            return false;
+        }
+    } catch (const std::out_of_range& oor) {
+        std::cerr << "Error: Numero fuera de rango para un entero." << std::endl;
+        return false;
+    } catch (const std::invalid_argument& ia) {
+        std::cerr << "Error: Entrada no es un numero valido." << std::endl;
+        return false;
+    }
 }
 
-int obtenerOpcionMenu(const std::string& prompt) {
-    int opcion;
+int obtenerEntero(const std::string& prompt) {
+    std::string entradaStr;
+    int valor;
     while (true) {
         std::cout << prompt;
-        std::cin >> opcion;
-        if (std::cin.fail()) {
-            std::cout << "Entrada invalida." << std::endl;
-            std::cin.clear();
-            limpiarBufferMain();
-        } else {
-            limpiarBufferMain();
-            return opcion;
+        std::getline(std::cin, entradaStr); 
+        if (validarEntero(entradaStr, valor)) {
+            return valor; 
         }
+    }
+}
+
+Matriz* seleccionarMatriz(Matriz& m1, Matriz& m2, Matriz& m3, const std::string& prompt) {
+    int eleccion;
+    std::cout << prompt << std::endl;
+    std::cout << "  1. Matriz m1" << std::endl;
+    std::cout << "  2. Matriz m2" << std::endl;
+    std::cout << "  3. Matriz m3" << std::endl;
+    eleccion = obtenerEntero("Seleccione una matriz: ");
+
+    switch (eleccion) {
+        case 1: return &m1;
+        case 2: return &m2;
+        case 3: return &m3;
+        default:
+            std::cout << "Seleccion invalida. " << std::endl;
+            return &m1; 
     }
 }
 
 int main() {
-    std::cout << "===== Demostracion Simple de la Libreria de Matrices =====" << std::endl;
+    Matriz m1, m2, m3; 
+    Matriz m_result; 
 
-    Matriz m1; 
-    Matriz m2(0, 0); 
-    Matriz m3(0, 0); 
-    Matriz m4(0, 0); 
-    Matriz m5(0, 0); 
+    int opcion;
+    do {
+        std::cout << "\n--- MENU DE OPERACIONES CON MATRICES ---" << std::endl;
+        std::cout << "1. Crear Matriz " << std::endl;
+        std::cout << "2. Llenar Matriz " << std::endl;
+        std::cout << "3. Mostrar Matriz" << std::endl;
+        std::cout << "4. Calcular Transpuesta" << std::endl;
+        std::cout << "5. Calcular Determinante" << std::endl;
+        std::cout << "6. Sumar Matrices" << std::endl;
+        std::cout << "7. Multiplicar Matrices" << std::endl;
+        std::cout << "8. Comparar Matrices" << std::endl;
+        std::cout << "0. Salir" << std::endl;
+        std::cout << "Ingrese su opcion: ";
 
-    try {
-        std::cout << "\n--- Creando matrices ---" << std::endl;
-        m1 = MatrizLib::crearMatriz(2, 2); 
-        m2 = MatrizLib::crearMatriz(2, 2); 
-        m3 = MatrizLib::crearMatriz(2, 3); 
-        m4 = MatrizLib::crearMatriz(3, 2); 
-        m5 = MatrizLib::crearMatriz(3, 3); 
+        opcion = obtenerEntero(""); 
 
-        std::cout << "Matrices creadas y inicializadas a 0." << std::endl;
-        m1.mostrarMatriz();
-        m2.mostrarMatriz();
-        m3.mostrarMatriz();
-        m4.mostrarMatriz();
-        m5.mostrarMatriz();
-
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error al crear matrices: " << e.what() << std::endl;
-        return 1; 
-    }
-
-    try {
-        std::cout << "\n--- Llenando m1 (2x2) ---" << std::endl;
-        m1.llenarMatriz();
-        m1.mostrarMatriz();
-
-        std::cout << "\n--- Llenando m2 (2x2) ---" << std::endl;
-        m2.llenarMatriz();
-        m2.mostrarMatriz();
-
-        std::cout << "\n--- Llenando m5 (3x3) ---" << std::endl;
-        m5.llenarMatriz();
-        m5.mostrarMatriz();
-
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error al llenar matrices: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Transpuesta de m1 ---" << std::endl;
-        Matriz m1_t = m1.transpuesta();
-        m1_t.mostrarMatriz();
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error en transpuesta: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Determinante de m5 ---" << std::endl;
-        double det_m5 = m5.determinante();
-        std::cout << "Determinante de m5: " << det_m5 << std::endl;
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error en determinante: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Suma de m1 + m2 ---" << std::endl;
-        Matriz suma_res = m1.suma(m2);
-        suma_res.mostrarMatriz();
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error en suma: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Intentando sumar m1 (2x2) y m3 (2x3) (ERROR ESPERADO) ---" << std::endl;
-        Matriz suma_invalida = m1.suma(m3); 
-        suma_invalida.mostrarMatriz();
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error esperado: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Multiplicacion de m3 (2x3) * m4 (3x2) ---" << std::endl;
-        std::cout << "Llenando m3 (2x3) para multiplicacion:" << std::endl;
-        m3.llenarMatriz();
-        std::cout << "Llenando m4 (3x2) para multiplicacion:" << std::endl;
-        m4.llenarMatriz();
-
-        Matriz mult_res = m3.multiplicacion(m4);
-        mult_res.mostrarMatriz();
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error en multiplicacion: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Intentando multiplicar m1 (2x2) * m3 (2x3) (ERROR ESPERADO) ---" << std::endl;
-        Matriz mult_invalida = m1.multiplicacion(m3); 
-        mult_invalida.mostrarMatriz();
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error esperado: " << e.what() << std::endl;
-    }
-
-    try {
-        std::cout << "\n--- Comparacion de m1 y m2 ---" << std::endl;
-        if (m1.esIgual(m2)) {
-            std::cout << "m1 y m2 son iguales." << std::endl;
-        } else {
-            std::cout << "m1 y m2 NO son iguales." << std::endl;
+        switch (opcion) {
+            case 1: { 
+                int filas = obtenerEntero("Ingrese el numero de filas: ");
+                int columnas = obtenerEntero("Ingrese el numero de columnas: ");
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione donde crear la matriz:");
+                try {
+                    *selectedMatriz = crearMatriz(filas, columnas);
+                    std::cout << "Matriz creada exitosamente." << std::endl;
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al crear matriz: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 2: { 
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione la matriz a llenar:");
+                selectedMatriz->llenarMatriz(); 
+                break;
+            }
+            case 3: { 
+                int eleccion;
+                std::cout << "Seleccione la matriz a mostrar:" << std::endl;
+                std::cout << "  1. Matriz m1" << std::endl;
+                std::cout << "  2. Matriz m2" << std::endl;
+                std::cout << "  3. Matriz m3" << std::endl;
+                std::cout << "  4. Matriz Resultado" << std::endl;
+                eleccion = obtenerEntero("Opcion (1-4): ");
+                
+                switch (eleccion) {
+                    case 1: m1.mostrarMatriz(); break;
+                    case 2: m2.mostrarMatriz(); break;
+                    case 3: m3.mostrarMatriz(); break;
+                    case 4: m_result.mostrarMatriz(); break;
+                    default: std::cout << "Seleccion invalida." << std::endl; break;
+                }
+                break;
+            }
+            case 4: { 
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione la matriz para calcular la transpuesta:");
+                try {
+                    m_result = selectedMatriz->transpuesta();
+                    std::cout << "Transpuesta calculada y guardada en Matriz Resultado." << std::endl;
+                    m_result.mostrarMatriz();
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al calcular transpuesta: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 5: { 
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione la matriz para calcular el determinante:");
+                try {
+                    double det = selectedMatriz->determinante();
+                    std::cout << "Determinante de la matriz: " << det << std::endl;
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al calcular determinante: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 6: { 
+                std::cout << "--- SUMA DE MATRICES ---" << std::endl;
+                Matriz* matA = seleccionarMatriz(m1, m2, m3, "Seleccione la primera matriz (operando A):");
+                Matriz* matB = seleccionarMatriz(m1, m2, m3, "Seleccione la segunda matriz (operando B):");
+                try {
+                    m_result = matA->suma(*matB);
+                    std::cout << "Suma de matrices calculada y guardada en Matriz Resultado." << std::endl;
+                    m_result.mostrarMatriz();
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al sumar matrices: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 7: { 
+                std::cout << "--- MULTIPLICACION DE MATRICES ---" << std::endl;
+                Matriz* matA = seleccionarMatriz(m1, m2, m3, "Seleccione la primera matriz (operando A):");
+                Matriz* matB = seleccionarMatriz(m1, m2, m3, "Seleccione la segunda matriz (operando B):");
+                try {
+                    m_result = matA->multiplicacion(*matB);
+                    std::cout << "Multiplicacion de matrices calculada" << std::endl;
+                    m_result.mostrarMatriz();
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al multiplicar matrices: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 8: { 
+                std::cout << "--- COMPARACION DE MATRICES ---" << std::endl;
+                Matriz* matA = seleccionarMatriz(m1, m2, m3, "Seleccione la primera matriz:");
+                Matriz* matB = seleccionarMatriz(m1, m2, m3, "Seleccione la segunda matriz:");
+                if (matA->esIgual(*matB)) {
+                    std::cout << "Las matrices son iguales." << std::endl;
+                } else {
+                    std::cout << "Las matrices no son iguales." << std::endl;
+                }
+                break;
+            }
+            case 0: {
+                std::cout << "Saliendo del programa." << std::endl;
+                break;
+            }
+            default: {
+                std::cout << "Opcion no valida." << std::endl;
+                break;
+            }
         }
-        
-        std::cout << "\n--- Comparacion de m1 y m1 (copia implicita) ---" << std::endl;
-        Matriz m1_copy = m1; 
-        if (m1.esIgual(m1_copy)) {
-            std::cout << "m1 y su copia son iguales." << std::endl;
-        } else {
-            std::cout << "m1 y su copia NO son iguales." << std::endl;
-        }
+    } while (opcion != 0); 
 
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error en comparacion: " << e.what() << std::endl;
-    }
-
-    std::cout << "\n===== Demostracion Simple Finalizada =====" << std::endl;
-    return 0;
-}
+    return 0;  }

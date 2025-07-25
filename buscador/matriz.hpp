@@ -2,33 +2,44 @@
 #define MATRIZ_HPP
 
 #include <iostream>  
-#include <iomanip>   
+#include <iomanip>  
 #include <stdexcept> 
+
+namespace MatrizLib { 
 
 class Matriz {
 private:
     double** datos; 
     int filas;      
-    int columnas;  
+    int columnas;   
 
-    void copiarDatos(const Matriz& otra);
+    void copiarDatos(const Matriz& otra); 
     void liberarDatos();                  
+
     double calcularDeterminanteCofactores(double** subMatriz, int n) const;
 
 public:
 
     Matriz();
     Matriz(int f, int c);
+    
     Matriz(const Matriz& otra);
     Matriz& operator=(const Matriz& otra);
+
     ~Matriz();
-    void llenarMatriz() const;
+
+    void llenarMatriz();
     void mostrarMatriz() const;
-    Matriz transpuesta()const;
-    double determinante()const;
+    Matriz transpuesta() const;
+    double determinante() const;
     Matriz suma(const Matriz& otra) const;
-    Matriz multiplicacion(const Matriz& otra)const;
-    bool esIgual(const Matriz& otra)const;
+    Matriz multiplicacion(const Matriz& otra) const;
+    bool esIgual(const Matriz& otra) const;
 };
+
+void limpiarBuffer();
+double obtenerDoubleValido(const std::string& prompt);
+
+} 
 
 #endif 

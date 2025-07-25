@@ -1,9 +1,12 @@
-#include "matriz.hpp"
-#include <iostream>
-#include <limits>
-#include <iomanip>
-#include <sstream>
-#include <cmath>
+#include "matriz.hpp" 
+#include <iostream>   
+#include <limits>     
+#include <iomanip>    
+#include <sstream>    
+#include <cmath>      
+#include <stdexcept>  
+
+namespace MatrizLib { 
 
 void limpiarBuffer() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -15,17 +18,16 @@ double obtenerDoubleValido(const std::string& prompt) {
         std::cout << prompt;
         std::cin >> valor;
         if (std::cin.fail()) {
-            std::cout << "Entrada invalida. Por favor, ingrese un numero valido." << std::endl;
-            std::cin.clear();
-            limpiarBuffer();
+            std::cout << "Entrada invalida." << std::endl;
+            std::cin.clear(); 
+            limpiarBuffer();  
         } else {
-            limpiarBuffer();
+            limpiarBuffer(); 
             return valor;
         }
     }
 }
-
-void Matriz::copiarDatos(const Matriz& otra){
+void Matriz::copiarDatos(const Matriz& otra) {
     filas = otra.filas;
     columnas = otra.columnas;
     if (filas > 0 && columnas > 0) {
@@ -53,7 +55,7 @@ void Matriz::liberarDatos() {
     columnas = 0;
 }
 
-double Matriz::calcularDeterminanteCofactores(double** mat, int n) const{
+double Matriz::calcularDeterminanteCofactores(double** mat, int n) const {
     double det = 0;
     if (n == 1) return mat[0][0];
     if (n == 2) return mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
@@ -76,7 +78,6 @@ double Matriz::calcularDeterminanteCofactores(double** mat, int n) const{
         det += signo * mat[0][c] * calcularDeterminanteCofactores(subMatriz, n - 1);
         signo = -signo;
     }
-
     for (int i = 0; i < n - 1; ++i) delete[] subMatriz[i];
     delete[] subMatriz;
     return det;
@@ -109,7 +110,7 @@ Matriz::~Matriz() {
     liberarDatos();
 }
 
-void Matriz::llenarMatriz()const {
+void Matriz::llenarMatriz() { 
     if (filas == 0 || columnas == 0) {
         std::cout << "La matriz esta vacia. No se pueden llenar datos." << std::endl;
         return;
@@ -123,7 +124,7 @@ void Matriz::llenarMatriz()const {
     std::cout << "Matriz llenada exitosamente." << std::endl;
 }
 
-void Matriz::mostrarMatriz() const {
+void Matriz::mostrarMatriz() const { 
     if (filas == 0 || columnas == 0) {
         std::cout << "La matriz esta vacia." << std::endl;
         return;
@@ -149,7 +150,7 @@ void Matriz::mostrarMatriz() const {
     std::cout << "-----------------------------------" << std::endl;
 }
 
-Matriz Matriz::transpuesta() const {
+Matriz Matriz::transpuesta() const { 
     if (filas == 0 || columnas == 0) throw std::runtime_error("No se puede calcular la transpuesta de una matriz vacia.");
     Matriz resultado(columnas, filas);
     for (int i = 0; i < filas; ++i) {
@@ -160,13 +161,13 @@ Matriz Matriz::transpuesta() const {
     return resultado;
 }
 
-double Matriz::determinante() const {
+double Matriz::determinante() const { 
     if (filas == 0 || columnas == 0) throw std::runtime_error("matriz vacia.");
     if (filas != columnas) throw std::runtime_error("El determinante solo se puede calcular para matrices cuadradas.");
     return calcularDeterminanteCofactores(datos, filas);
 }
 
-Matriz Matriz::suma(const Matriz& otra) const {
+Matriz Matriz::suma(const Matriz& otra) const { 
     if (filas != otra.filas || columnas != otra.columnas) throw std::runtime_error("Las matrices deben tener las mismas dimensiones para la suma.");
     if (filas == 0 || columnas == 0) throw std::runtime_error("No se puede sumar matrices vacias.");
 
@@ -179,7 +180,7 @@ Matriz Matriz::suma(const Matriz& otra) const {
     return resultado;
 }
 
-Matriz Matriz::multiplicacion(const Matriz& otra) const {
+Matriz Matriz::multiplicacion(const Matriz& otra) const { 
     if (columnas != otra.filas) throw std::runtime_error("Las matrices no son compatibles para la multiplicacion.");
     if (filas == 0 || columnas == 0 || otra.filas == 0 || otra.columnas == 0) throw std::runtime_error("No se puede multiplicar matrices vacias.");
 
@@ -195,7 +196,7 @@ Matriz Matriz::multiplicacion(const Matriz& otra) const {
     return resultado;
 }
 
-bool Matriz::esIgual(const Matriz& otra) const {
+bool Matriz::esIgual(const Matriz& otra) const { 
     if (filas != otra.filas || columnas != otra.columnas) return false;
     if (filas == 0 && columnas == 0) return true;
 
@@ -206,3 +207,5 @@ bool Matriz::esIgual(const Matriz& otra) const {
     }
     return true;
 }
+
+} 
