@@ -1,105 +1,184 @@
 #include <iostream> 
-#include <fstream>  
-#include <string>   
-#include <vector>   
-#include <algorithm> // Para std::transform y std::tolower
+#include <string>    
 #include <limits>    
-#include <cctype>    
+#include <stdexcept>
+#include "matriz.hpp"    
+#include "MatrizLib.hpp" 
 
-// colores
-const std::string ANSI_COLOR_GREEN = "\x1b[32m";
-const std::string ANSI_COLOR_RESET = "\x1b[0m";
+using namespace MatrizLib;
 
-// Función para convertir una cadena a minúsculas
-std::string aMinusculas(std::string texto) {
-    // Itera sobre cada caracter de la cadena
-    for (size_t i = 0; i < texto.length(); ++i) {
-        texto[i] = std::tolower(static_cast<unsigned char>(texto[i]));
-    }
-    return texto;
-}
-
-void procesarArchivo(const std::string& archivo) {
-    std::ifstream archivo_entrada(archivo); 
-
-    // 6. Validaciones: Si el archivo no existe
-    if (!archivo_entrada.is_open()) {
-        std::cout << "Error: No se pudo abrir el archivo '" << archivo << "'. Asegurese de que existe." << std::endl;
-        return; 
-    }
-    std::string palabra_a_buscar;
-    std::string palabra_a_buscar_minusculas; 
-    bool entrada_valida = false; 
-
-    // 6. Validaciones
-    while (!entrada_valida) {
-        std::cout << "\nIngrese la palabra o caracter a buscar: ";
-        std::getline(std::cin, palabra_a_buscar); // lee la línea completa, incluyendo espacios
-        
-        if (palabra_a_buscar.empty()) {
-            std::cout << "Error: La palabra o caracter a buscar no puede estar vacio. Por favor, intente de nuevo." << std::endl;
+bool validarEntero(const std::string& str, int& valor) {
+    try {
+        size_t pos;
+        valor = std::stoi(str, &pos); 
+        if (pos == str.length()) { 
+            return true; 
         } else {
-            entrada_valida = true; 
-            palabra_a_buscar_minusculas = aMinusculas(palabra_a_buscar); // Convertir para búsqueda insensible
+            std::cerr << "Error: Entrada no es un entero." << std::endl;
+            return false;
         }
+    } catch (const std::out_of_range& oor) {
+        std::cerr << "Error: Numero fuera de rango para un entero." << std::endl;
+        return false;
+    } catch (const std::invalid_argument& ia) {
+        std::cerr << "Error: Entrada no es un numero valido." << std::endl;
+        return false;
     }
-    std::string linea_actual;
-    int total_coincidencias = 0;
-    int numero_linea = 0;
-
-    std::cout << "\nResultados de la busqueda para \"" << palabra_a_buscar << "\":" << std::endl;
-    std::cout << "--------------------------------------------------------" << std::endl;
-
-    // 1. Lectura de archivos: Leer linea por linea
-    while (std::getline(archivo_entrada, linea_actual)) { // Lee cada línea del archivo
-        numero_linea++;
-        std::string linea_minusculas = aMinusculas(linea_actual); // Convertir la línea actual a minúsculas
-        std::string linea_a_mostrar = linea_actual; // Copia de la línea original para mostrar con resaltado
-
-        size_t pos = 0;
-        int coincidencias_en_linea = 0;
-
-        // 2. Búsqueda insensible a mayúsculas/minúsculas y resaltado de coincidencias
-        while ((pos = linea_minusculas.find(palabra_a_buscar_minusculas, pos)) != std::string::npos) {
-            // Insertar el código de color verde antes de la coincidencia
-            linea_a_mostrar.insert(pos, ANSI_COLOR_GREEN);
-            linea_a_mostrar.insert(pos + palabra_a_buscar_minusculas.length() + ANSI_COLOR_GREEN.length(), ANSI_COLOR_RESET);
-            // Ajustar la posición para la siguiente búsqueda
-            pos += palabra_a_buscar_minusculas.length() + ANSI_COLOR_GREEN.length() + ANSI_COLOR_RESET.length();
-            coincidencias_en_linea++;
-        }
-
-        // 4. Reporte de resultados: Mostrar cada línea con coincidencias
-        std::cout << "Linea " << numero_linea << ": " << linea_a_mostrar << std::endl;
-        total_coincidencias += coincidencias_en_linea; // Acumula el total de coincidencias
-    }
-
-    archivo_entrada.close(); 
-
-    // Cantidad total de coincidencias al final
-    std::cout << "--------------------------------------------------------" << std::endl;
-    std::cout << "Total de coincidencias para \"" << palabra_a_buscar << "\": " << total_coincidencias << std::endl;
 }
 
-// Función principal del programa
-int main() {
-    std::string nombre_archivo_a_usar = "archivo.txt"; 
-    char opcion_repetir;
-
-    // 5. Interacción del usuario: Permitir repetir el proceso
-    do {
-        procesarArchivo(nombre_archivo_a_usar); 
-        std::cout << "\n--------------------------------------------------------" << std::endl;
-        std::cout << "¿Desea realizar una nueva busqueda? (S/N): ";
-        std::cin >> opcion_repetir;
-        opcion_repetir = std::toupper(opcion_repetir); // Convertir a mayúscula para comparar
-
-        // Limpiar el resto de la línea del buffer de entrada después de leer el char
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    } while (opcion_repetir == 'S');
-
-    std::cout << "Programa finalizado" << std::endl;
-
-    return 0; 
+int obtenerEntero(const std::string& prompt) {
+    std::string entradaStr;
+    int valor;
+    while (true) {
+        std::cout << prompt;
+        std::getline(std::cin, entradaStr); 
+        if (validarEntero(entradaStr, valor)) {
+            return valor; 
+        }
     }
+}
+
+Matriz* seleccionarMatriz(Matriz& m1, Matriz& m2, Matriz& m3, const std::string& prompt) {
+    int eleccion;
+    std::cout << prompt << std::endl;
+    std::cout << "  1. Matriz m1" << std::endl;
+    std::cout << "  2. Matriz m2" << std::endl;
+    std::cout << "  3. Matriz m3" << std::endl;
+    eleccion = obtenerEntero("Seleccione una matriz: ");
+
+    switch (eleccion) {
+        case 1: return &m1;
+        case 2: return &m2;
+        case 3: return &m3;
+        default:
+            std::cout << "Seleccion invalida. " << std::endl;
+            return &m1; 
+    }
+}
+
+int main() {
+    Matriz m1, m2, m3; 
+    Matriz m_result; 
+
+    int opcion;
+    do {
+        std::cout << "\n--- MENU DE OPERACIONES CON MATRICES ---" << std::endl;
+        std::cout << "1. Crear Matriz " << std::endl;
+        std::cout << "2. Llenar Matriz " << std::endl;
+        std::cout << "3. Mostrar Matriz" << std::endl;
+        std::cout << "4. Calcular Transpuesta" << std::endl;
+        std::cout << "5. Calcular Determinante" << std::endl;
+        std::cout << "6. Sumar Matrices" << std::endl;
+        std::cout << "7. Multiplicar Matrices" << std::endl;
+        std::cout << "8. Comparar Matrices" << std::endl;
+        std::cout << "0. Salir" << std::endl;
+        std::cout << "Ingrese su opcion: ";
+
+        opcion = obtenerEntero(""); 
+
+        switch (opcion) {
+            case 1: { 
+                int filas = obtenerEntero("Ingrese el numero de filas: ");
+                int columnas = obtenerEntero("Ingrese el numero de columnas: ");
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione donde crear la matriz:");
+                try {
+                    *selectedMatriz = crearMatriz(filas, columnas);
+                    std::cout << "Matriz creada exitosamente." << std::endl;
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al crear matriz: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 2: { 
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione la matriz a llenar:");
+                selectedMatriz->llenarMatriz(); 
+                break;
+            }
+            case 3: { 
+                int eleccion;
+                std::cout << "Seleccione la matriz a mostrar:" << std::endl;
+                std::cout << "  1. Matriz m1" << std::endl;
+                std::cout << "  2. Matriz m2" << std::endl;
+                std::cout << "  3. Matriz m3" << std::endl;
+                std::cout << "  4. Matriz Resultado" << std::endl;
+                eleccion = obtenerEntero("Opcion (1-4): ");
+                
+                switch (eleccion) {
+                    case 1: m1.mostrarMatriz(); break;
+                    case 2: m2.mostrarMatriz(); break;
+                    case 3: m3.mostrarMatriz(); break;
+                    case 4: m_result.mostrarMatriz(); break;
+                    default: std::cout << "Seleccion invalida." << std::endl; break;
+                }
+                break;
+            }
+            case 4: { 
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione la matriz para calcular la transpuesta:");
+                try {
+                    m_result = selectedMatriz->transpuesta();
+                    std::cout << "Transpuesta calculada y guardada en Matriz Resultado." << std::endl;
+                    m_result.mostrarMatriz();
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al calcular transpuesta: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 5: { 
+                Matriz* selectedMatriz = seleccionarMatriz(m1, m2, m3, "Seleccione la matriz para calcular el determinante:");
+                try {
+                    double det = selectedMatriz->determinante();
+                    std::cout << "Determinante de la matriz: " << det << std::endl;
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al calcular determinante: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 6: { 
+                std::cout << "--- SUMA DE MATRICES ---" << std::endl;
+                Matriz* matA = seleccionarMatriz(m1, m2, m3, "Seleccione la primera matriz (operando A):");
+                Matriz* matB = seleccionarMatriz(m1, m2, m3, "Seleccione la segunda matriz (operando B):");
+                try {
+                    m_result = matA->suma(*matB);
+                    std::cout << "Suma de matrices calculada y guardada en Matriz Resultado." << std::endl;
+                    m_result.mostrarMatriz();
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al sumar matrices: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 7: { 
+                std::cout << "--- MULTIPLICACION DE MATRICES ---" << std::endl;
+                Matriz* matA = seleccionarMatriz(m1, m2, m3, "Seleccione la primera matriz (operando A):");
+                Matriz* matB = seleccionarMatriz(m1, m2, m3, "Seleccione la segunda matriz (operando B):");
+                try {
+                    m_result = matA->multiplicacion(*matB);
+                    std::cout << "Multiplicacion de matrices calculada" << std::endl;
+                    m_result.mostrarMatriz();
+                } catch (const std::runtime_error& e) {
+                    std::cerr << "Error al multiplicar matrices: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 8: { 
+                std::cout << "--- COMPARACION DE MATRICES ---" << std::endl;
+                Matriz* matA = seleccionarMatriz(m1, m2, m3, "Seleccione la primera matriz:");
+                Matriz* matB = seleccionarMatriz(m1, m2, m3, "Seleccione la segunda matriz:");
+                if (matA->esIgual(*matB)) {
+                    std::cout << "Las matrices son iguales." << std::endl;
+                } else {
+                    std::cout << "Las matrices no son iguales." << std::endl;
+                }
+                break;
+            }
+            case 0: {
+                std::cout << "Saliendo del programa." << std::endl;
+                break;
+            }
+            default: {
+                std::cout << "Opcion no valida." << std::endl;
+                break;
+            }
+        }
+    } while (opcion != 0); 
+
+    return 0;  }
