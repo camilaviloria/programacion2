@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "programacion"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.dbclient-js": "javascript",
+			"*.txt": "pip-requirements",
+			"iostream": "cpp",
+			"iosfwd": "cpp"
+		},
+		"svn.ignoreMissingSvnWarning": true
+	}
+}
