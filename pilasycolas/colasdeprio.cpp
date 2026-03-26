@@ -22,44 +22,35 @@ class cola_procesos{
     }
 
     public:
-     // Constructor
     cola_procesos(int cap_inicial = 5) {
         capacidad = cap_inicial;
         tamano = 0;
         arreglo = new proceso[capacidad];
     }
 
-    // Destructor para evitar fugas de memoria
     ~cola_procesos() {
         delete[] arreglo; }
 
     void insertarproceso(int id, string nombre, int prioridad) {
-    // 1. Validar si hay espacio
     if (tamano == capacidad) {
         cout << "Error: La cola de procesos está llena (Overflow)." << endl;
         return;
     }
 
-    // 2. Crear el objeto temporal
     proceso nuevo;
     nuevo.id = id;
     nuevo.nombre = nombre;
     nuevo.prioridad = prioridad;
 
-    // 3. Buscar la posición y desplazar elementos
     int i = tamano - 1;
 
-    // Mientras no lleguemos al inicio Y el proceso actual tenga MENOR prioridad
     while (i >= 0 && arreglo[i].prioridad < prioridad) {
         arreglo[i + 1] = arreglo[i]; // Desplazamos a la derecha
         i--;
     }
 
-    // 4. Insertar en el lugar exacto
-    // El índice i bajó hasta uno antes de la posición ideal, por eso usamos i+1
     arreglo[i + 1] = nuevo;
 
-    // 5. Actualizar el contador
     tamano++;
 } void ejecutar_siguiente() {
         if (tamano == 0) {
@@ -70,7 +61,6 @@ class cola_procesos{
         cout << "\n>>> Atendiendo a: " << arreglo[0].nombre 
              << " (Prioridad: " << arreglo[0].prioridad << ")" << endl;
 
-        // Desplazamos los elementos para "eliminar" el primero
         for (int i = 0; i < tamano - 1; i++) {
             arreglo[i] = arreglo[i + 1];
         }
