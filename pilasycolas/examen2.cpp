@@ -87,7 +87,6 @@ int main() {
     sistema.procesar(121, "claudio", "profesores", 2);
     sistema.procesar(123, "paul", "estudiantes", 3);
     sistema.procesar(144, "jose", "personal de mantenimiento", 4);
-    sistema.procesar(144, "jose", "personal de mantenimiento", 4);
 
 
 
