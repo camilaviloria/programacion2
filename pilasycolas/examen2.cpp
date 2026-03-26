@@ -32,11 +32,12 @@ class cola_prioridad {
      ~cola_prioridad() {
         delete[] arreglo; }
 
-    void procesar(int id,string nombre, string rol, int prioridad){
-         if (tamano == capacidad) {
-        cout << "La cola de procesos está llena" << endl;
-        return;
-    }    
+    bool procesar(int id, string nombre, string rol, int prioridad) {
+    if (tamano >= capacidad) {
+        cout << "\nla cola de procesos está llena" << endl;
+        return false; 
+    }
+
         persona nuevo;
         nuevo.id=id;
         nuevo.rol=rol;
@@ -46,13 +47,14 @@ class cola_prioridad {
          int i = tamano - 1;
 
     while (i >= 0 && arreglo[i].prioridad > prioridad) {
-        arreglo[i + 1] = arreglo[i]; 
-        i--;
+            arreglo[i + 1] = arreglo[i];
+            i--;
+        }
+
+        arreglo[i + 1] = nuevo;
+        tamano++;
+        return true;
     }
-
-    arreglo[i + 1] = nuevo;
-
-    tamano++;}
     void ejecutar_siguiente() {
         if (tamano == 0) {
             cout << "No hay personas" << endl;
@@ -81,10 +83,12 @@ int main() {
     cola_prioridad sistema(5);
 
     sistema.procesar(101, "julio","directores", 5);
-    sistema.procesar(111, "laura", "administracion", 1);
+    sistema.procesar(111, "laura", "administracion", 6);
     sistema.procesar(121, "claudio", "profesores", 2);
     sistema.procesar(123, "paul", "estudiantes", 3);
     sistema.procesar(144, "jose", "personal de mantenimiento", 4);
+    sistema.procesar(144, "jose", "personal de mantenimiento", 4);
+
 
 
     sistema.mostrar_cola();
