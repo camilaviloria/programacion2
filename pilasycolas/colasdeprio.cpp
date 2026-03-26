@@ -44,7 +44,7 @@ class cola_procesos{
 
     int i = tamano - 1;
 
-    while (i >= 0 && arreglo[i].prioridad < prioridad) {
+    while (i >= 0 && arreglo[i].prioridad > prioridad) {
         arreglo[i + 1] = arreglo[i]; // Desplazamos a la derecha
         i--;
     }
