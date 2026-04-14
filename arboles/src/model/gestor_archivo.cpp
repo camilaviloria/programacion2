@@ -9,7 +9,8 @@ std::string obtenerCampo(const std::string& linea, int indice) {
 	std::string campo = "";
 	int comas = 0;
 
-	for (char c : linea) {
+	for (std::size_t i = 0; i < linea.size(); ++i) {
+		char c = linea[i];
 		if (c == ',') {
 			++comas;
 			if (comas > indice) {
@@ -25,7 +26,8 @@ std::string obtenerCampo(const std::string& linea, int indice) {
 
 int contarComas(const std::string& linea) {
 	int total = 0;
-	for (char c : linea) {
+	for (std::size_t i = 0; i < linea.size(); ++i) {
+		char c = linea[i];
 		if (c == ',') {
 			++total;
 		}
@@ -68,6 +70,44 @@ MiembroFamilia* buscarPorId(MiembroFamilia* cabeza, int id) {
 		actual = actual->siguienteEnLista;
 	}
 	return nullptr;
+}
+
+MiembroFamilia* encontrarSucesorPorEstado(MiembroFamilia* nodo, bool incluirPrision) {
+	if (nodo == nullptr) {
+		return nullptr;
+	}
+
+	if (!nodo->isDead && (incluirPrision || !nodo->inJail)) {
+		return nodo;
+	}
+
+	MiembroFamilia* candidatoMayor = encontrarSucesorPorEstado(nodo->hijoMayor, incluirPrision);
+	if (candidatoMayor != nullptr) {
+		return candidatoMayor;
+	}
+
+	return encontrarSucesorPorEstado(nodo->hijoMenor, incluirPrision);
+}
+
+void imprimirSucesionPorEstado(MiembroFamilia* nodo, int& posicion, bool incluirPrision) {
+	if (nodo == nullptr) {
+		return;
+	}
+
+	if (!nodo->isDead && ((incluirPrision && nodo->inJail) || (!incluirPrision && !nodo->inJail))) {
+		std::cout << posicion << ". " << nodo->name << " " << nodo->lastName;
+		if (nodo->isBoss) {
+			std::cout << " <--- JEFE ACTUAL";
+		}
+		if (nodo->inJail) {
+			std::cout << " [CARCEL]";
+		}
+		std::cout << std::endl;
+		++posicion;
+	}
+
+	imprimirSucesionPorEstado(nodo->hijoMayor, posicion, incluirPrision);
+	imprimirSucesionPorEstado(nodo->hijoMenor, posicion, incluirPrision);
 }
 
 }
@@ -188,6 +228,33 @@ MiembroFamilia* modelo_cargarDesdeCSV(const std::string& rutaArchivo) {
 	return cabeza;
 }
 
+bool modelo_guardarEnCSV(MiembroFamilia* cabezaLista, const std::string& rutaArchivo) {
+	std::ofstream archivo(rutaArchivo);
+	if (!archivo.is_open()) {
+		return false;
+	}
+
+	archivo << "id,name,last_name,gender,age,id_boss,is_dead,in_jail,was_boss,is_boss\n";
+
+	MiembroFamilia* actual = cabezaLista;
+	while (actual != nullptr) {
+		archivo << actual->id << ","
+				<< actual->name << ","
+				<< actual->lastName << ","
+				<< actual->gender << ","
+				<< actual->age << ","
+				<< actual->idBoss << ","
+				<< (actual->isDead ? 1 : 0) << ","
+				<< (actual->inJail ? 1 : 0) << ","
+				<< (actual->wasBoss ? 1 : 0) << ","
+				<< (actual->isBoss ? 1 : 0) << "\n";
+
+		actual = actual->siguienteEnLista;
+	}
+
+	return true;
+}
+
 MiembroFamilia* modelo_construirArbol(MiembroFamilia* cabezaLista) {
 	MiembroFamilia* raiz = nullptr;
 	MiembroFamilia* actual = cabezaLista;
@@ -224,16 +291,12 @@ MiembroFamilia* modelo_encontrarSucesor(MiembroFamilia* nodo) {
 		return nullptr;
 	}
 
-	if (!nodo->isDead && !nodo->inJail) {
-		return nodo;
+	MiembroFamilia* sucesorLibre = encontrarSucesorPorEstado(nodo, false);
+	if (sucesorLibre != nullptr) {
+		return sucesorLibre;
 	}
 
-	MiembroFamilia* candidatoMayor = modelo_encontrarSucesor(nodo->hijoMayor);
-	if (candidatoMayor != nullptr) {
-		return candidatoMayor;
-	}
-
-	return modelo_encontrarSucesor(nodo->hijoMenor);
+	return encontrarSucesorPorEstado(nodo, true);
 }
 
 void modelo_limpiarJefes(MiembroFamilia* nodo) {
@@ -244,4 +307,22 @@ void modelo_limpiarJefes(MiembroFamilia* nodo) {
 	nodo->isBoss = false;
 	modelo_limpiarJefes(nodo->hijoMayor);
 	modelo_limpiarJefes(nodo->hijoMenor);
+}
+
+int modelo_contarVivos(MiembroFamilia* nodo) {
+	if (nodo == nullptr) {
+		return 0;
+	}
+
+	int vivosEnNodo = nodo->isDead ? 0 : 1;
+	return vivosEnNodo + modelo_contarVivos(nodo->hijoMayor) + modelo_contarVivos(nodo->hijoMenor);
+}
+
+void modelo_imprimirSucesionVivos(MiembroFamilia* nodo, int& posicion) {
+	if (nodo == nullptr) {
+		return;
+	}
+
+	imprimirSucesionPorEstado(nodo, posicion, false);
+	imprimirSucesionPorEstado(nodo, posicion, true);
 }
