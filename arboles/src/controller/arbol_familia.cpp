@@ -6,12 +6,89 @@
 #include <iostream>
 #include <limits>
 #include <string>
-#include <unordered_set>
-#include <vector>
 
 static MiembroFamilia* listaGlobal = nullptr;
 static MiembroFamilia* raizArbol = nullptr;
 static const char* kRutaCSV = "bin/familia.csv";
+
+struct NodoMiembroLista {
+	MiembroFamilia* miembro;
+	NodoMiembroLista* siguiente;
+};
+
+struct RegistroEstadoMuerte {
+	MiembroFamilia* miembro;
+	bool estadoOriginal;
+	RegistroEstadoMuerte* siguiente;
+};
+void anexarMiembroLista(NodoMiembroLista*& cabeza, NodoMiembroLista*& cola, MiembroFamilia* miembro) {
+	NodoMiembroLista* nuevo = new NodoMiembroLista{miembro, nullptr}; 
+	if (cabeza == nullptr) {
+		cabeza = nuevo;
+		cola = nuevo; 
+		return;
+	}
+
+	cola->siguiente = nuevo;
+	cola = nuevo;
+}
+
+bool contieneMiembroPorId(NodoMiembroLista* cabeza, int id) {
+	NodoMiembroLista* actual = cabeza;
+	while (actual != nullptr) {
+		if (actual->miembro != nullptr && actual->miembro->id == id) {
+			return true;
+		}
+		actual = actual->siguiente;
+	}
+
+	return false;
+}
+
+void liberarListaMiembros(NodoMiembroLista*& cabeza) {
+	NodoMiembroLista* actual = cabeza;
+	while (actual != nullptr) {
+		NodoMiembroLista* siguiente = actual->siguiente;
+		delete actual;
+		actual = siguiente;
+	}
+
+	cabeza = nullptr;
+}
+
+bool existeRegistroEstado(RegistroEstadoMuerte* cabeza, MiembroFamilia* miembro) {
+	RegistroEstadoMuerte* actual = cabeza;
+	while (actual != nullptr) {
+		if (actual->miembro == miembro) {
+			return true;
+		}
+		actual = actual->siguiente;
+	}
+
+	return false;
+}
+
+void guardarEstadoMuerteOriginal(RegistroEstadoMuerte*& cabeza, MiembroFamilia* miembro) {
+	if (miembro == nullptr || existeRegistroEstado(cabeza, miembro)) {
+		return;
+	}
+
+	RegistroEstadoMuerte* nuevo = new RegistroEstadoMuerte{miembro, miembro->isDead, cabeza};
+	cabeza = nuevo;
+}
+
+void restaurarYLiberarEstados(RegistroEstadoMuerte*& cabeza) {
+	RegistroEstadoMuerte* actual = cabeza;
+	while (actual != nullptr) {
+		actual->miembro->isDead = actual->estadoOriginal;
+
+		RegistroEstadoMuerte* siguiente = actual->siguiente;
+		delete actual;
+		actual = siguiente;
+	}
+
+	cabeza = nullptr;
+}
 
 bool esElegible(MiembroFamilia* nodo, bool permitirCarcel) {
 	if (nodo == nullptr || nodo->isDead) {
@@ -191,27 +268,17 @@ MiembroFamilia* seleccionarNuevoJefePorReglas(MiembroFamilia* raiz, MiembroFamil
 	return seleccionarNuevoJefeEnModo(raiz, jefeActual, true);
 }
 
-void recolectarNodos(MiembroFamilia* nodo, std::vector<MiembroFamilia*>& nodos) {
-	if (nodo == nullptr) {
-		return;
-	}
-
-	nodos.push_back(nodo);
-	recolectarNodos(nodo->hijoMayor, nodos);
-	recolectarNodos(nodo->hijoMenor, nodos);
-}
-
-void recolectarVivosEnCarcel(MiembroFamilia* nodo, std::vector<MiembroFamilia*>& presos) {
+void recolectarVivosEnCarcel(MiembroFamilia* nodo, NodoMiembroLista*& presos, NodoMiembroLista*& colaPresos) {
 	if (nodo == nullptr) {
 		return;
 	}
 
 	if (!nodo->isDead && nodo->inJail) {
-		presos.push_back(nodo);
+		anexarMiembroLista(presos, colaPresos, nodo);
 	}
 
-	recolectarVivosEnCarcel(nodo->hijoMayor, presos);
-	recolectarVivosEnCarcel(nodo->hijoMenor, presos);
+	recolectarVivosEnCarcel(nodo->hijoMayor, presos, colaPresos);
+	recolectarVivosEnCarcel(nodo->hijoMenor, presos, colaPresos);
 }
 
 void controller_eventoCargarDatos() {
@@ -458,43 +525,36 @@ void controller_eventoMostrarSucesionVivos() {
 		return;
 	}
 
-	std::vector<MiembroFamilia*> nodos;
-	recolectarNodos(raizArbol, nodos);
-	std::vector<bool> estadoOriginalMuerte;
-	estadoOriginalMuerte.reserve(nodos.size());
-	for (MiembroFamilia* nodo : nodos) {
-		estadoOriginalMuerte.push_back(nodo->isDead);
-	}
-
 	int posicion = 1;
-	std::unordered_set<int> idsImpresos;
-	std::vector<MiembroFamilia*> sucesoresCalculados;
+	NodoMiembroLista* sucesoresCalculados = nullptr;
+	NodoMiembroLista* colaSucesores = nullptr;
+	RegistroEstadoMuerte* estadosModificados = nullptr;
 
 	if (!jefeActual->isDead && !jefeActual->inJail) {
-		sucesoresCalculados.push_back(jefeActual);
-		idsImpresos.insert(jefeActual->id);
+		anexarMiembroLista(sucesoresCalculados, colaSucesores, jefeActual);
 	}
 
 	MiembroFamilia* jefeSimulado = jefeActual;
 	while (jefeSimulado != nullptr) {
+		guardarEstadoMuerteOriginal(estadosModificados, jefeSimulado);
 		jefeSimulado->isDead = true;
 
 		MiembroFamilia* siguiente = seleccionarNuevoJefePorReglas(raizArbol, jefeSimulado);
 		if (siguiente == nullptr) {
 			break;
 		}
-		if (idsImpresos.count(siguiente->id) > 0) {
+		if (contieneMiembroPorId(sucesoresCalculados, siguiente->id)) {
 			break;
 		}
 
-		sucesoresCalculados.push_back(siguiente);
-		idsImpresos.insert(siguiente->id);
+		anexarMiembroLista(sucesoresCalculados, colaSucesores, siguiente);
 
 		jefeSimulado = siguiente;
 	}
 
-	for (MiembroFamilia* sucesor : sucesoresCalculados) {
-		if (!sucesor->inJail) {
+	for (NodoMiembroLista* actual = sucesoresCalculados; actual != nullptr; actual = actual->siguiente) {
+		MiembroFamilia* sucesor = actual->miembro;
+		if (sucesor != nullptr && !sucesor->inJail) {
 			std::cout << posicion << ". " << sucesor->name << " " << sucesor->lastName;
 			if (sucesor->isBoss) {
 				std::cout << " <--- JEFE ACTUAL";
@@ -504,30 +564,38 @@ void controller_eventoMostrarSucesionVivos() {
 		}
 	}
 
-	for (MiembroFamilia* sucesor : sucesoresCalculados) {
-		if (sucesor->inJail) {
+	for (NodoMiembroLista* actual = sucesoresCalculados; actual != nullptr; actual = actual->siguiente) {
+		MiembroFamilia* sucesor = actual->miembro;
+		if (sucesor != nullptr && sucesor->inJail) {
 			std::cout << posicion << ". " << sucesor->name << " " << sucesor->lastName << " [CARCEL]" << std::endl;
 			++posicion;
 		}
 	}
 
-	if (sucesoresCalculados.empty()) {
+	if (sucesoresCalculados == nullptr) {
 		std::cout << "No hay sucesores vivos." << std::endl;
 	}
 
-	for (std::size_t i = 0; i < nodos.size(); ++i) {
-		nodos[i]->isDead = estadoOriginalMuerte[i];
-	}
+	restaurarYLiberarEstados(estadosModificados);
 
-	std::vector<MiembroFamilia*> presosVivos;
-	recolectarVivosEnCarcel(raizArbol, presosVivos);
-	if (!presosVivos.empty()) {
+	NodoMiembroLista* presosVivos = nullptr;
+	NodoMiembroLista* colaPresosVivos = nullptr;
+	recolectarVivosEnCarcel(raizArbol, presosVivos, colaPresosVivos);
+	if (presosVivos != nullptr) {
 		std::cout << "\n--- VIVOS EN CARCEL (ELEGIBLES SOLO SI NO HAY LIBRES) ---" << std::endl;
-		for (std::size_t i = 0; i < presosVivos.size(); ++i) {
-			std::cout << (i + 1) << ". " << presosVivos[i]->name << " " << presosVivos[i]->lastName
-					  << " [CARCEL]" << std::endl;
+		int posicionPresos = 1;
+		for (NodoMiembroLista* actual = presosVivos; actual != nullptr; actual = actual->siguiente) {
+			MiembroFamilia* preso = actual->miembro;
+			if (preso != nullptr) {
+				std::cout << posicionPresos << ". " << preso->name << " " << preso->lastName
+						  << " [CARCEL]" << std::endl;
+				++posicionPresos;
+			}
 		}
 	}
+
+	liberarListaMiembros(sucesoresCalculados);
+	liberarListaMiembros(presosVivos);
 
 	std::cout << "=============================================\n" << std::endl;
 }
