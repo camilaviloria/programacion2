@@ -3,30 +3,13 @@
 #include <fstream>
 #include <iostream>
 
-using namespace std;
-
 namespace {
 
-string limpiarCampo(const string& texto) {
-	size_t inicio = 0;
-	while (inicio < texto.size() && (texto[inicio] == ' ' || texto[inicio] == '\t' || texto[inicio] == '\r')) {
-		++inicio;
-	}
-
-	size_t fin = texto.size();
-	while (fin > inicio && (texto[fin - 1] == ' ' || texto[fin - 1] == '\t' || texto[fin - 1] == '\r')) {
-		--fin;
-	}
-
-	return texto.substr(inicio, fin - inicio);
-}
-
-string obtenerCampo(const string& linea, int indice) {
-	string campo = "";
+std::string obtenerCampo(const std::string& linea, int indice) {
+	std::string campo = "";
 	int comas = 0;
 
-	for (size_t i = 0; i < linea.size(); ++i) {
-		char c = linea[i];
+	for (char c : linea) {
 		if (c == ',') {
 			++comas;
 			if (comas > indice) {
@@ -37,13 +20,12 @@ string obtenerCampo(const string& linea, int indice) {
 		}
 	}
 
-	return limpiarCampo(campo);
+	return campo;
 }
 
-int contarComas(const string& linea) {
+int contarComas(const std::string& linea) {
 	int total = 0;
-	for (size_t i = 0; i < linea.size(); ++i) {
-		char c = linea[i];
+	for (char c : linea) {
 		if (c == ',') {
 			++total;
 		}
@@ -51,10 +33,10 @@ int contarComas(const string& linea) {
 	return total;
 }
 
-bool convertirEntero(const string& texto, int& valor) {
+bool convertirEntero(const std::string& texto, int& valor) {
 	try {
-		size_t idx = 0;
-		int numero = stoi(texto, &idx);
+		std::size_t idx = 0;
+		int numero = std::stoi(texto, &idx);
 		if (idx != texto.size()) {
 			return false;
 		}
@@ -65,7 +47,7 @@ bool convertirEntero(const string& texto, int& valor) {
 	}
 }
 
-bool convertirBool01(const string& texto, bool& valor) {
+bool convertirBool01(const std::string& texto, bool& valor) {
 	if (texto == "0") {
 		valor = false;
 		return true;
@@ -105,33 +87,54 @@ MiembroFamilia* encontrarSucesorPorEstado(MiembroFamilia* nodo, bool incluirPris
 	return encontrarSucesorPorEstado(nodo->hijoMenor, incluirPrision);
 }
 
-void imprimirSucesionPorEstado(MiembroFamilia* nodo, int& posicion, bool incluirPrision) {
+bool cumpleFiltroSucesion(MiembroFamilia* nodo, bool incluirPrision) {
+	return !nodo->isDead && (incluirPrision ? nodo->inJail : !nodo->inJail);
+}
+
+MiembroFamilia* buscarJefeEnArbol(MiembroFamilia* nodo) {
+	if (nodo == nullptr) {
+		return nullptr;
+	}
+
+	if (nodo->isBoss) {
+		return nodo;
+	}
+
+	MiembroFamilia* jefeEnMayor = buscarJefeEnArbol(nodo->hijoMayor);
+	if (jefeEnMayor != nullptr) {
+		return jefeEnMayor;
+	}
+
+	return buscarJefeEnArbol(nodo->hijoMenor);
+}
+
+void imprimirSucesionPorEstado(MiembroFamilia* nodo, int& posicion, bool incluirPrision, int idExcluido) {
 	if (nodo == nullptr) {
 		return;
 	}
 
-	if (!nodo->isDead && ((incluirPrision && nodo->inJail) || (!incluirPrision && !nodo->inJail))) {
-		cout << posicion << ". " << nodo->name << " " << nodo->lastName;
+	if (nodo->id != idExcluido && cumpleFiltroSucesion(nodo, incluirPrision)) {
+		std::cout << posicion << ". " << nodo->name << " " << nodo->lastName;
 		if (nodo->isBoss) {
-			cout << " <--- JEFE ACTUAL";
+			std::cout << " <--- JEFE ACTUAL";
 		}
 		if (nodo->inJail) {
-			cout << " [CARCEL]";
+			std::cout << " [CARCEL]";
 		}
-		cout << endl;
+		std::cout << std::endl;
 		++posicion;
 	}
 
-	imprimirSucesionPorEstado(nodo->hijoMayor, posicion, incluirPrision);
-	imprimirSucesionPorEstado(nodo->hijoMenor, posicion, incluirPrision);
+	imprimirSucesionPorEstado(nodo->hijoMayor, posicion, incluirPrision, idExcluido);
+	imprimirSucesionPorEstado(nodo->hijoMenor, posicion, incluirPrision, idExcluido);
 }
 
 }
 
 MiembroFamilia* modelo_crearMiembro(
 	int id,
-	const string& name,
-	const string& lastName,
+	const std::string& name,
+	const std::string& lastName,
 	char gender,
 	int age,
 	int idBoss,
@@ -157,41 +160,41 @@ MiembroFamilia* modelo_crearMiembro(
 	return miembro;
 }
 
-MiembroFamilia* modelo_cargarDesdeCSV(const string& rutaArchivo) {
-	ifstream archivo(rutaArchivo);
+MiembroFamilia* modelo_cargarDesdeCSV(const std::string& rutaArchivo) {
+	std::ifstream archivo(rutaArchivo);
 	if (!archivo.is_open()) {
 		return nullptr;
 	}
 
-	string linea;
-	getline(archivo, linea);
+	std::string linea;
+	std::getline(archivo, linea);
 
 	MiembroFamilia* cabeza = nullptr;
 	MiembroFamilia* ultimo = nullptr;
 	int numeroLinea = 1;
 
-	while (getline(archivo, linea)) {
+	while (std::getline(archivo, linea)) {
 		++numeroLinea;
 		if (linea.empty()) {
 			continue;
 		}
 
 		if (contarComas(linea) != 9) {
-			cout << "[ADVERTENCIA] Linea " << numeroLinea
-					  << " ignorada: se esperaban 10 columnas." << endl;
+			std::cout << "[ADVERTENCIA] Linea " << numeroLinea
+					  << " ignorada: se esperaban 10 columnas." << std::endl;
 			continue;
 		}
 
-		string campoId = obtenerCampo(linea, 0);
-		string campoName = obtenerCampo(linea, 1);
-		string campoLastName = obtenerCampo(linea, 2);
-		string campoGender = obtenerCampo(linea, 3);
-		string campoAge = obtenerCampo(linea, 4);
-		string campoIdBoss = obtenerCampo(linea, 5);
-		string campoIsDead = obtenerCampo(linea, 6);
-		string campoInJail = obtenerCampo(linea, 7);
-		string campoWasBoss = obtenerCampo(linea, 8);
-		string campoIsBoss = obtenerCampo(linea, 9);
+		std::string campoId = obtenerCampo(linea, 0);
+		std::string campoName = obtenerCampo(linea, 1);
+		std::string campoLastName = obtenerCampo(linea, 2);
+		std::string campoGender = obtenerCampo(linea, 3);
+		std::string campoAge = obtenerCampo(linea, 4);
+		std::string campoIdBoss = obtenerCampo(linea, 5);
+		std::string campoIsDead = obtenerCampo(linea, 6);
+		std::string campoInJail = obtenerCampo(linea, 7);
+		std::string campoWasBoss = obtenerCampo(linea, 8);
+		std::string campoIsBoss = obtenerCampo(linea, 9);
 
 		int id = 0;
 		int age = 0;
@@ -201,8 +204,8 @@ MiembroFamilia* modelo_cargarDesdeCSV(const string& rutaArchivo) {
 		bool wasBoss = false;
 		bool isBoss = false;
 
-		const string& name = campoName;
-		const string& lastName = campoLastName;
+		const std::string& name = campoName;
+		const std::string& lastName = campoLastName;
 
 		bool idOk = convertirEntero(campoId, id);
 		bool ageOk = convertirEntero(campoAge, age);
@@ -214,8 +217,8 @@ MiembroFamilia* modelo_cargarDesdeCSV(const string& rutaArchivo) {
 		bool genderOk = (campoGender.size() == 1 && (campoGender[0] == 'H' || campoGender[0] == 'M'));
 
 		if (!(idOk && ageOk && idBossOk && deadOk && jailOk && wasBossOk && isBossOk && genderOk)) {
-			cout << "[ADVERTENCIA] Linea " << numeroLinea
-					  << " ignorada: valores invalidos (genero o banderas)." << endl;
+			std::cout << "[ADVERTENCIA] Linea " << numeroLinea
+					  << " ignorada: valores invalidos (genero o banderas)." << std::endl;
 			continue;
 		}
 
@@ -244,8 +247,8 @@ MiembroFamilia* modelo_cargarDesdeCSV(const string& rutaArchivo) {
 	return cabeza;
 }
 
-bool modelo_guardarEnCSV(MiembroFamilia* cabezaLista, const string& rutaArchivo) {
-	ofstream archivo(rutaArchivo);
+bool modelo_guardarEnCSV(MiembroFamilia* cabezaLista, const std::string& rutaArchivo) {
+	std::ofstream archivo(rutaArchivo);
 	if (!archivo.is_open()) {
 		return false;
 	}
@@ -339,6 +342,14 @@ void modelo_imprimirSucesionVivos(MiembroFamilia* nodo, int& posicion) {
 		return;
 	}
 
-	imprimirSucesionPorEstado(nodo, posicion, false);
-	imprimirSucesionPorEstado(nodo, posicion, true);
+	int idJefeImpreso = -1;
+	MiembroFamilia* jefeActual = buscarJefeEnArbol(nodo);
+	if (jefeActual != nullptr && cumpleFiltroSucesion(jefeActual, false)) {
+		std::cout << posicion << ". " << jefeActual->name << " " << jefeActual->lastName << " <--- JEFE ACTUAL" << std::endl;
+		++posicion;
+		idJefeImpreso = jefeActual->id;
+	}
+
+	imprimirSucesionPorEstado(nodo, posicion, false, idJefeImpreso);
+	imprimirSucesionPorEstado(nodo, posicion, true, idJefeImpreso);
 }

@@ -4,32 +4,58 @@
 
 #include <iostream>
 
-using namespace std;
+namespace {
 
-void interfaz_mostrarMensaje(const string& mensaje) {
-	cout << "\n[SISTEMA]: " << mensaje << endl;
-}
-
-void interfaz_anunciarJefe(const string& nombreJefe) {
-	cout << "--------------------------------" << endl;
-	if (!nombreJefe.empty()) {
-		cout << "NUEVO JEFE: " << nombreJefe << endl;
-	} else {
-		cout << "NO HAY SUCESOR DISPONIBLE." << endl;
+void imprimirNodo(MiembroFamilia* nodo, int nivel) {
+	if (nodo == nullptr) {
+		return;
 	}
-	cout << "--------------------------------" << endl;
+
+	for (int i = 0; i < nivel; ++i) {
+		std::cout << "   ";
+	}
+
+	std::cout << (nodo->isDead ? "[X] " : "[ ] ")
+			  << nodo->name << " " << nodo->lastName
+			  << " (" << nodo->gender << ", " << nodo->age << ")";
+
+	if (nodo->inJail) {
+		std::cout << " [CARCEL]";
+	}
+	if (nodo->isBoss) {
+		std::cout << " <--- JEFE";
+	}
+
+	std::cout << std::endl;
+
+	imprimirNodo(nodo->hijoMayor, nivel + 1);
+	imprimirNodo(nodo->hijoMenor, nivel + 1);
 }
 
-void interfaz_mostrarArbol(const string& arbolTexto) {
-	cout << "\n=== ARBOL DE LA FAMILIA ===" << endl;
-	cout << arbolTexto;
-	cout << "===========================\n" << endl;
 }
 
-void interfaz_mostrarSucesionVivos(const string& sucesionTexto) {
-	cout << "\n=== LINEA DE SUCESION ACTUAL (SOLO VIVOS) ===" << endl;
-	cout << sucesionTexto;
-	cout << "=============================================\n" << endl;
+void interfaz_mostrarMensaje(const std::string& mensaje) {
+	std::cout << "\n[SISTEMA]: " << mensaje << std::endl;
+}
+
+void interfaz_anunciarJefe(MiembroFamilia* jefe) {
+	std::cout << "--------------------------------" << std::endl;
+	if (jefe != nullptr) {
+		std::cout << "NUEVO JEFE: " << jefe->name << " " << jefe->lastName << std::endl;
+	} else {
+		std::cout << "NO HAY SUCESOR DISPONIBLE." << std::endl;
+	}
+	std::cout << "--------------------------------" << std::endl;
+}
+
+void interfaz_mostrarArbol(MiembroFamilia* raiz) {
+	std::cout << "\n=== ARBOL DE LA FAMILIA ===" << std::endl;
+	if (raiz == nullptr) {
+		std::cout << "(Vacio)" << std::endl;
+	} else {
+		imprimirNodo(raiz, 0);
+	}
+	std::cout << "===========================\n" << std::endl;
 }
 
 void interfaz_iniciarSistema() {
@@ -37,15 +63,16 @@ void interfaz_iniciarSistema() {
 	bool ejecutar = true;
 
 	while (ejecutar) {
-		cout << "\n1. Cargar datos desde CSV" << endl;
-		cout << "2. Asignar nuevo jefe" << endl;
-		cout << "3. Mostrar linea de sucesion actual (solo vivos)" << endl;
-		cout << "4. Salir" << endl;
-		cout << ">> ";
+		std::cout << "\n1. Cargar datos desde CSV" << std::endl;
+		std::cout << "2. Asignar nuevo jefe" << std::endl;
+		std::cout << "3. Mostrar linea de sucesion actual (solo vivos)" << std::endl;
+		std::cout << "4. Editar datos de un nodo" << std::endl;
+		std::cout << "5. Salir" << std::endl;
+		std::cout << ">> ";
 
-		if (!(cin >> opcion)) {
-			cin.clear();
-			cin.ignore(1000, '\n');
+		if (!(std::cin >> opcion)) {
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			opcion = 0;
 		}
 
@@ -55,14 +82,14 @@ void interfaz_iniciarSistema() {
 				break;
 			case 2: {
 				int motivo = 0;
-				cout << "\nMotivo de cambio de jefe:" << endl;
-				cout << "1. Prision" << endl;
-				cout << "2. Muerte" << endl;
-				cout << ">> ";
+				std::cout << "\nMotivo de cambio de jefe:" << std::endl;
+				std::cout << "1. Prision" << std::endl;
+				std::cout << "2. Muerte" << std::endl;
+				std::cout << ">> ";
 
-				if (!(cin >> motivo)) {
-					cin.clear();
-					cin.ignore(1000, '\n');
+				if (!(std::cin >> motivo)) {
+					std::cin.clear();
+					std::cin.ignore(1000, '\n');
 					motivo = 0;
 				}
 
@@ -73,6 +100,9 @@ void interfaz_iniciarSistema() {
 				controller_eventoMostrarSucesionVivos();
 				break;
 			case 4:
+				controller_eventoEditarMiembro();
+				break;
+			case 5:
 				ejecutar = false;
 				interfaz_mostrarMensaje("Saliendo...");
 				break;

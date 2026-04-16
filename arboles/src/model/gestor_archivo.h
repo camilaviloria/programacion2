@@ -1,14 +1,12 @@
 #ifndef GESTOR_ARCHIVO_H
 #define GESTOR_ARCHIVO_H
 
-#include <string> 
-
-using namespace std;
+#include <string>
 
 struct MiembroFamilia {
 	int id;
-	string name;
-	string lastName;
+	std::string name;
+	std::string lastName;
 	char gender;
 	int age;
 	int idBoss;
@@ -23,8 +21,8 @@ struct MiembroFamilia {
 
 MiembroFamilia* modelo_crearMiembro(
 	int id,
-	const string& name,
-	const string& lastName,
+	const std::string& name,
+	const std::string& lastName,
 	char gender,
 	int age,
 	int idBoss,
@@ -34,8 +32,8 @@ MiembroFamilia* modelo_crearMiembro(
 	bool isBoss
 );
 
-MiembroFamilia* modelo_cargarDesdeCSV(const string& rutaArchivo);
-bool modelo_guardarEnCSV(MiembroFamilia* cabezaLista, const string& rutaArchivo);
+MiembroFamilia* modelo_cargarDesdeCSV(const std::string& rutaArchivo);
+bool modelo_guardarEnCSV(MiembroFamilia* cabezaLista, const std::string& rutaArchivo);
 MiembroFamilia* modelo_construirArbol(MiembroFamilia* cabezaLista);
 MiembroFamilia* modelo_encontrarSucesor(MiembroFamilia* nodo);
 void modelo_limpiarJefes(MiembroFamilia* nodo);

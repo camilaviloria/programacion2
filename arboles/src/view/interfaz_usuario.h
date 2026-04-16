@@ -1,14 +1,13 @@
 #ifndef INTERFAZ_USUARIO_H
 #define INTERFAZ_USUARIO_H
 
-#include <string> 
+#include <string>
 
-using namespace std;
+#include "../model/gestor_archivo.h"
 
 void interfaz_iniciarSistema();
-void interfaz_mostrarMensaje(const string& mensaje);
-void interfaz_mostrarArbol(const string& arbolTexto);
-void interfaz_anunciarJefe(const string& nombreJefe);
-void interfaz_mostrarSucesionVivos(const string& sucesionTexto);
+void interfaz_mostrarMensaje(const std::string& mensaje);
+void interfaz_mostrarArbol(MiembroFamilia* raiz);
+void interfaz_anunciarJefe(MiembroFamilia* jefe);
 
 #endif
