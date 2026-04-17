@@ -10,8 +10,8 @@ int main() {
     g.agregarArista(2, 3, 8);
     g.agregarArista(3, 4, 3);
 
-    g.BFS(0);
-    g.dijkstra(0);
+    g.BFS(2);
+    g.dijkstra(3);
 
     return 0;
 } 
