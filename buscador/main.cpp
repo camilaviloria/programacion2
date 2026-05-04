@@ -62,7 +62,7 @@ void procesarArchivo(const std::string& archivo) {
         // 2. Búsqueda insensible a mayúsculas/minúsculas y resaltado de coincidencias
         while ((pos = linea_minusculas.find(palabra_a_buscar_minusculas, pos)) != std::string::npos) {
             // Insertar el código de color verde antes de la coincidencia
-            linea_a_mostrar.insert(pos, ANSI_COLOR_GREEN);
+            linea_a_mostrar.insert(pos, "\x1b[32m");
             linea_a_mostrar.insert(pos + palabra_a_buscar_minusculas.length() + ANSI_COLOR_GREEN.length(), ANSI_COLOR_RESET);
             // Ajustar la posición para la siguiente búsqueda
             pos += palabra_a_buscar_minusculas.length() + ANSI_COLOR_GREEN.length() + ANSI_COLOR_RESET.length();
