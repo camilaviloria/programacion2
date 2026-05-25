@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "VariablesAndConstants",
+            "request": "launch",
+            "mainClass": "VariablesAndConstants",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
             "name": "App",
             "request": "launch",
             "mainClass": "App"
