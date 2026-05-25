@@ -2,6 +2,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "operadores",
+            "request": "launch",
+            "mainClass": "operadores",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "ejercicios",
+            "request": "launch",
+            "mainClass": "ejercicios",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "DataTypes",
+            "request": "launch",
+            "mainClass": "DataTypes",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
             "name": "VariablesAndConstants",
             "request": "launch",
             "mainClass": "VariablesAndConstants",
