@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "StringExample",
+            "request": "launch",
+            "mainClass": "StringExample",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
             "name": "operadores",
             "request": "launch",
             "mainClass": "operadores",
