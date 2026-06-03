@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "listas",
+            "request": "launch",
+            "mainClass": "listas",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
             "name": "arrays",
             "request": "launch",
             "mainClass": "arrays",
