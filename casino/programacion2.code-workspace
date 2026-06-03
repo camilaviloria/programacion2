@@ -8,6 +8,15 @@
 	"settings": {
 		"files.associations": {
 			"*.h": "cpp"
-		}
+		},
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"driver": "SQLite",
+				"name": "conection_prueba",
+				"database": "./SQL/empresa.db"
+			}
+		],
+		"sqltools.useNodeRuntime": true
 	}
 }
