@@ -32,7 +32,11 @@ public class listas {
         System.out.println(names.get(0));
 
         //buscar elementos
-        System.out.println(names.contains("camila"));
+        System.out.println(names.contains("viloria"));
+
+        //eliminar todos los elementos
+        names.clear();
+        System.out.println(names.size());
 
         //ordenar
         names.sort(null);
