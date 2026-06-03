@@ -22,3 +22,7 @@ FROM empleados
 GROUP BY departamento;
 
 SELECT * FROM empleados;
+
+SELECT departamento, SUM(salario) AS total_salario
+FROM empleados
+GROUP BY ROLLUP (departamento);
