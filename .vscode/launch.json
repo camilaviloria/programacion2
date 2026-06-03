@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "condicionales",
+            "request": "launch",
+            "mainClass": "condicionales",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
             "name": "StringExample",
             "request": "launch",
             "mainClass": "StringExample",
