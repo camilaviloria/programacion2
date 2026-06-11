@@ -2,6 +2,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Loops",
+            "request": "launch",
+            "mainClass": "basic.c06_loops.Loops",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "Loops",
+            "request": "launch",
+            "mainClass": "Loops",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "bucles",
+            "request": "launch",
+            "mainClass": "bucles",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
             "name": "listas",
             "request": "launch",
             "mainClass": "listas",

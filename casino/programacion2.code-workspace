@@ -17,6 +17,7 @@
 				"database": "./SQL/empresa.db"
 			}
 		],
-		"sqltools.useNodeRuntime": true
+		"sqltools.useNodeRuntime": true,
+		"java.debug.settings.onBuildFailureProceed": true
 	}
 }
