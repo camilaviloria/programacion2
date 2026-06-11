@@ -1,7 +1,7 @@
-package Factory;
+package factory;
 
 public class Email implements Notificaciones {
-    pivate String email;
+    private String email;
     private String correo;
     private String contraseña;
     @Override
