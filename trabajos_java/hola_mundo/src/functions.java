@@ -3,16 +3,29 @@ public class functions {
         //funciones
         for (int index = 0; index < 5; index++) {
             sendEmail();
-            sendEmailToUser("djncjkenjkcn@gmail.com");
         }
-        //funcion sin parametros
-        public static void sendEmail() {
-            System.out.println("se envia el email");
-            
-        }
-        //funcion con parametros
-        public static void sendEmailToUser(String email) {
-            System.out.println("se envia el email a " + email);
+        sendEmail();
+        sendEmailToUser("jdhbcwhdbciwe");
+        sendEmailToUser("jdhbcwhdbciwe", "camila");
+        var user =new ArrayList<String>(Arrays.asList("jdhbcwhdbciwe"));
+        sendEmailToUser(user);
+        
+    }
+    // funciones sin parametros 
+    static void sendEmail() {
+        System.out.println("Enviando correo");
+    }
+    // funciones con parametros
+    static void sendEmailToUser(String email) {
+        System.out.println("Enviando correo a " + email);
+    }
+    //sobrecarga de funciones
+    static void sendEmailToUser(String email, String name) {
+        System.out.println("Enviando correo a " + email + " de " + name);
+    }
+    static void sendEmailToUser(String[] emails) {
+        for (String email : emails) {
+            System.out.println("Enviando correo a " + email);
         }
     }
 }
