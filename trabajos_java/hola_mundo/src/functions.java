@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 public class functions {
     public static void main(String[] args) { //como es static se colocan todas las funciones static
         //funciones
@@ -7,8 +9,11 @@ public class functions {
         sendEmail();
         sendEmailToUser("jdhbcwhdbciwe");
         sendEmailToUser("jdhbcwhdbciwe", "camila");
-        var user =new ArrayList<String>(Arrays.asList("jdhbcwhdbciwe"));
-        sendEmailToUser(user);
+        var users = new ArrayList<String>(Arrays.asList("jdhbcwhdbciwe"));
+        sendEmailToUser(users); 
+        var state = sendEmailWhithReturn("jdhbcwhdbciwe");
+        System.out.println(state);
+        System.out.println(sendEmailWhithReturn("jdhbcwhdbciwe"));
         
     }
     // funciones sin parametros 
@@ -23,9 +28,18 @@ public class functions {
     static void sendEmailToUser(String email, String name) {
         System.out.println("Enviando correo a " + email + " de " + name);
     }
-    static void sendEmailToUser(String[] emails) {
+    static void sendEmailToUser(ArrayList<String> emails) {
         for (String email : emails) {
-            System.out.println("Enviando correo a " + email);
+            sendEmailToUser(email);
         }
     }
+    //con retorno
+    static boolean sendEmailWhithReturn(String email) {
+        if (email.isEmpty()) {
+            return false;
+        }
+        System.out.println("Enviando correo a" + email);
+        return true;
+    }
 }
+// si tennemos una logica que se repite ponemos en la funcion para llamar a otras funciones
