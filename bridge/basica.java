@@ -16,7 +16,6 @@ public class basica implements operaciones {
         return a / b; 
     }
 
-    // Métodos científicos no soportados en modo básico
     @Override public double exponente(double a, double b) { return 0; }
     @Override public double log10(double base, double exp) { return 0; }
     @Override public double logNatural(double a) { return 0; }

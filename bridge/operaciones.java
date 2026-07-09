@@ -12,5 +12,5 @@ public interface operaciones {
     double log10(double base, double exp);
     double logNatural(double a);
     double raiz(double a);
-    double resolvente(double a, double b, double c); // Añadido 'c' que falta para la resolvente
-}
+    double resolvente(double a, double b, double c); 
+ }
