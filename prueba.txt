@@ -1,6 +1,0 @@
-ID,Nombre,Departamento,Puesto,Salario
-101,Ana Silva,Recursos Humanos,Analista de Datos,1500
-102,Carlos Ramos,Sistemas,Administrador de Redes,2100
-103,Lucia Mendez,Desarrollo,Programador Junior,1800
-104,Jose Castro,Soporte,Tecnico de Hardware,1200
-105,Maria Gomez,Desarrollo,Arquitecto de Software,3200

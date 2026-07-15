@@ -1,5 +1,6 @@
 package examenPOO;
 import java.io.IOException;
+
 public class CsvManager {
     private CsvTable table;
 
