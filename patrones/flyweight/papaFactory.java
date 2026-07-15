@@ -1,5 +1,5 @@
 package patrones.flyweight;
-
+//Es una clase encargada de crear y gestionar los objetos compartidos.
 import java.util.HashMap;
 import java.util.Map;
 

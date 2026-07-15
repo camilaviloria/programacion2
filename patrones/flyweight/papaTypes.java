@@ -1,5 +1,5 @@
 package patrones.flyweight;
-
+// se repiten y se comparten (no cambian)
 public class papaTypes {
     private String color; 
     private String kind;

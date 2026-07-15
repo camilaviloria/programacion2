@@ -1,4 +1,4 @@
-package bridge;
+package patrones.bridge;
 
 public interface operaciones {
     // Básicas

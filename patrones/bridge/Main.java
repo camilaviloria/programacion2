@@ -1,4 +1,4 @@
-package bridge;
+package patrones.bridge;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package bridge;
+package patrones.bridge;
 
 public class calculadora {
     protected operaciones implementador;

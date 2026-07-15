@@ -1,4 +1,5 @@
 package patrones.flyweight;
+// cambian dependiendo del objeto pero no se comparten
 public class papa {
     private float weight;
     private float height;

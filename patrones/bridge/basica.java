@@ -1,4 +1,4 @@
-package bridge;
+package patrones.bridge;
 
 public class basica implements operaciones {
     @Override

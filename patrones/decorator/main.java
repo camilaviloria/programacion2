@@ -1,7 +1,7 @@
 package patrones.decorator;
 
 public class main {
-    public static void main(String[] args) {
+    public main() {
         // 1. Creamos la muñeca base (la fea)
         doll miMuneca = new uglyDoll("Anabelle");
         
