@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casino Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">
+        <div class="logo-icon">
+          <svg viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="var(--gold)" stroke-width="1.5"/>
+            <circle cx="8" cy="8" r="2.5" fill="var(--gold)"/>
+          </svg>
+        </div>
+        <div class="logo-name">Casino<span>Pro</span></div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="nav-section-label">Principal</div>
+      <div class="nav-item active" data-page="overview">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor" opacity=".6"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity=".4"/></svg>
+        Resumen
+      </div>
+      <div class="nav-item" data-page="events">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="6" x2="15" y2="6" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="9" x2="11" y2="9" stroke="currentColor" stroke-width="1.2"/></svg>
+        Eventos
+        <span class="nav-badge" id="badge-events">12</span>
+      </div>
+      <div class="nav-item" data-page="clients">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.2" opacity=".5"/><path d="M1 14c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Clientes
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item" data-page="centros">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="6" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 6V4a4 4 0 018 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="10.5" r="1.5" fill="currentColor"/></svg>
+        Centros
+      </div>
+      <div class="nav-item" data-page="apuestas">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 13L8 3l5 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><line x1="4.5" y1="10" x2="11.5" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Apuestas
+        <span class="nav-badge">12</span>
+      </div>
+
+    </nav>
+
+    <div class="sb-footer">
+      <div class="theme-switch">
+        <div class="theme-label">
+          <svg id="theme-icon-moon" viewBox="0 0 16 16" fill="none"><path d="M13.5 9.5A6 6 0 016 2a6 6 0 100 12 6 6 0 007.5-4.5z" stroke="currentColor" stroke-width="1.2"/></svg>
+          <svg id="theme-icon-sun" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="1" x2="8" y2="3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="8" y1="13" x2="8" y2="15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="1" y1="8" x2="3" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="13" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <span id="theme-label-text">Modo oscuro</span>
+        </div>
+        <div class="toggle on" id="theme-toggle"><div class="toggle-knob"></div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbar-title">Resumen general</div>
+        <div class="topbar-sub" id="topbar-sub">Vista consolidada del dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <div class="date-pill" id="live-clock">—</div>
+        <div class="status-pill"><div class="status-dot"></div>En línea</div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: OVERVIEW ═══════════ -->
+    <div class="page active" id="page-overview">
+
+      <div class="metrics-row">
+        <div class="metric-card gold">
+          <div class="metric-label">Volumen total</div>
+          <div class="metric-val">$5,900</div>
+          <div class="metric-trend trend-up">↑ 12% vs mes anterior</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Apuestas</div>
+          <div class="metric-val">12</div>
+          <div class="metric-trend trend-up">↑ 8% semana</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Clientes activos</div>
+          <div class="metric-val">12</div>
+          <div class="metric-trend trend-neu">+2 nuevos este mes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Tasa de ganancia</div>
+          <div class="metric-val">58%</div>
+          <div class="metric-trend trend-dn">↓ −3 pts</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Centros activos</div>
+          <div class="metric-val">11</div>
+          <div class="metric-trend trend-neu">1 inactivo</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Volumen por casino</div>
+          </div>
+          <div class="bar-list" id="vol-bars-overview"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Top clientes por inversión</div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="col-rank">#</th>
+                  <th>Cliente</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="top-clients-tbl"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Eventos recientes</div></div>
+          <div class="event-list" id="recent-events"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Apuestas por tipo</div></div>
+          <div class="donut-wrap">
+            <div class="chart-wrap chart-wrap-120">
+              <canvas id="donut-tipos" role="img" aria-label="Distribución de apuestas por tipo">Simple: 7, Combinada: 4, Handicap: 2</canvas>
+            </div>
+            <div class="donut-legend" id="donut-tipos-legend"></div>
+          </div>
+          <div class="mt-18">
+            <div class="card-title mb-10">Turno operativo</div>
+            <div class="donut-wrap">
+              <div class="chart-wrap chart-wrap-100">
+                <canvas id="donut-turnos" role="img" aria-label="Distribución por turno">24h: 3, Tarde: 3, Mañana: 5, Noche: 2</canvas>
+              </div>
+              <div class="donut-legend" id="donut-turnos-legend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════ PAGE: EVENTS ═══════════ -->
+    <div class="page" id="page-events">
+      <div class="filter-bar">
+        <button class="filter-chip events-filter active" data-filter="all">Todos <span id="f-all-count"></span></button>
+        <button class="filter-chip events-filter" data-filter="En curso">En curso</button>
+        <button class="filter-chip events-filter" data-filter="Programado">Programados</button>
+        <button class="filter-chip events-filter" data-filter="Finalizado">Finalizados</button>
+        <input class="search-input" id="event-search" placeholder="Buscar evento...">
+      </div>
+      <div class="card">
+        <div class="event-list" id="events-full-list"></div>
+        <div class="empty is-hidden" id="events-empty">Sin eventos para este filtro.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: CLIENTS ═══════════ -->
+    <div class="page" id="page-clients">
+      <div class="filter-bar">
+        <button class="filter-chip clients-filter active" data-filter="all">Todos</button>
+        <button class="filter-chip clients-filter" data-filter="activo">Activos</button>
+        <button class="filter-chip clients-filter" data-filter="inactivo">Inactivos</button>
+        <input class="search-input" id="client-search" placeholder="Buscar cliente...">
+      </div>
+      <div class="card">
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th class="js-client-sort" data-sort-key="nombre">Cliente</th>
+                <th class="js-client-sort" data-sort-key="saldo">Saldo cuenta</th>
+                <th class="js-client-sort" data-sort-key="total">Total inv.</th>
+                <th>Método</th>
+                <th>Plataforma</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="clients-tbl"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-16">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Métodos de cobro</div></div>
+          <div class="bar-list" id="metodos-bars"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Saldo total por cliente</div></div>
+          <div class="chart-wrap chart-wrap-h200">
+            <canvas id="chart-saldos" role="img" aria-label="Saldo por cliente">Andrés Blanco 9500, Ricardo Moreno 7000, etc.</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: CENTROS ═══════════ -->
+    <div class="page" id="page-centros">
+      <div class="metrics-row">
+        <div class="metric-card"><div class="metric-label">Total centros</div><div class="metric-val">12</div></div>
+        <div class="metric-card gold"><div class="metric-label">Fondo total</div><div class="metric-val">$1.1M</div></div>
+        <div class="metric-card"><div class="metric-label">Cap. máx. total</div><div class="metric-val">3,170</div></div>
+        <div class="metric-card"><div class="metric-label">Activos</div><div class="metric-val">11</div><div class="metric-trend trend-up">91.7%</div></div>
+      </div>
+
+      <div class="card mb-16">
+        <div class="card-header">
+          <div class="card-title">Rendimiento por centro</div>
+          <div class="inline-flex-gap-6">
+            <button class="filter-chip centros-sort active" id="cs-vol" data-sort-key="vol">Volumen</button>
+            <button class="filter-chip centros-sort" id="cs-eff" data-sort-key="eff">Eficiencia</button>
+            <button class="filter-chip centros-sort" id="cs-cap" data-sort-key="cap">Capacidad</button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th>Local</th>
+                <th>Casino</th>
+                <th>Ciudad</th>
+                <th>Volumen</th>
+                <th>Apuestas</th>
+                <th>Promedio</th>
+                <th>Eficiencia</th>
+                <th>Fondo</th>
+                <th>Capacidad</th>
+                <th>Turno</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="centros-tbl"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Top eficiencia (vol/fondo)</div></div>
+          <div class="bar-list" id="eff-bars-centros"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Distribución por turno</div></div>
+          <div class="donut-wrap">
+            <div class="chart-wrap chart-wrap-120">
+              <canvas id="donut-turnos-centros" role="img" aria-label="Turnos de centros">24h 3, Mañana 5, Tarde 3, Noche 2</canvas>
+            </div>
+            <div class="donut-legend" id="turnos-centros-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: APUESTAS ═══════════ -->
+    <div class="page" id="page-apuestas">
+      <div class="metrics-row">
+        <div class="metric-card gold"><div class="metric-label">Monto total</div><div class="metric-val">$5,900</div></div>
+        <div class="metric-card"><div class="metric-label">Apuesta máx.</div><div class="metric-val">$3,000</div></div>
+        <div class="metric-card"><div class="metric-label">Apuesta mín.</div><div class="metric-val">$40</div></div>
+        <div class="metric-card"><div class="metric-label">Promedio</div><div class="metric-val">$491</div></div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-chip apuestas-filter active" data-filter="all">Todas</button>
+        <button class="filter-chip apuestas-filter" data-filter="Ganada">Ganadas</button>
+        <button class="filter-chip apuestas-filter" data-filter="Perdida">Perdidas</button>
+        <button class="filter-chip apuestas-filter" data-filter="En curso">En curso</button>
+        <input class="search-input" id="apuesta-search" placeholder="Buscar...">
+      </div>
+
+      <div class="card mb-16">
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Evento</th>
+                <th>Centro</th>
+                <th>Cuota</th>
+                <th>Monto</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="apuestas-tbl"></tbody>
+          </table>
+        </div>
+        <div class="empty is-hidden" id="apuestas-empty">Sin apuestas para este filtro.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Volumen por evento</div></div>
+          <div class="bar-list" id="vol-evento-bars"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Estado de apuestas</div></div>
+          <div class="donut-wrap">
+            <div class="chart-wrap chart-wrap-130">
+              <canvas id="donut-estados" role="img" aria-label="Estados de apuestas">Ganadas 7, Perdidas 4, En curso 1</canvas>
+            </div>
+            <div class="donut-legend" id="estados-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script src="/vendor/chart.umd.js"></script>
+<script src="/index.js"></script>
+</body>
+</html>

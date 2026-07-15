@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "programacion2",
+			"path": ".."
+		},
+		{
+			"path": "../../../../../Downloads/Poo examen 2"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.h": "cpp"
+		},
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"driver": "SQLite",
+				"name": "conection_prueba",
+				"database": "./SQL/empresa.db"
+			}
+		],
+		"sqltools.useNodeRuntime": true,
+		"java.debug.settings.onBuildFailureProceed": true
+	}
+}

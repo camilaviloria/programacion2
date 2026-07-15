@@ -1,0 +1,101 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Loops",
+            "request": "launch",
+            "mainClass": "basic.c06_loops.Loops",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "Loops",
+            "request": "launch",
+            "mainClass": "Loops",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "bucles",
+            "request": "launch",
+            "mainClass": "bucles",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "listas",
+            "request": "launch",
+            "mainClass": "listas",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "arrays",
+            "request": "launch",
+            "mainClass": "arrays",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "condicionales",
+            "request": "launch",
+            "mainClass": "condicionales",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "StringExample",
+            "request": "launch",
+            "mainClass": "StringExample",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "operadores",
+            "request": "launch",
+            "mainClass": "operadores",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "ejercicios",
+            "request": "launch",
+            "mainClass": "ejercicios",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "DataTypes",
+            "request": "launch",
+            "mainClass": "DataTypes",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "VariablesAndConstants",
+            "request": "launch",
+            "mainClass": "VariablesAndConstants",
+            "projectName": "programacion2_7211e9a3"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App"
+        },
+        {
+            "name": "C/C++: clang build and debug active file",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "C/C++: clang build active file"
+        }
+    ],
+    "version": "2.0.0"
+}
