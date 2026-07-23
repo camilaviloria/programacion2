@@ -1,5 +1,5 @@
 package Abstrac;
-
+// Fábrica Concreta 1: Solo produce cosas de Marketing
 public class UrgentNotificationFactory implements NotificationFactory {
     public Email crearEmail() {
         return new EmailUrgente();

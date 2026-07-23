@@ -1,5 +1,6 @@
 package patrones.decorator;
-
+//permite añadir funcionalidades a objetos colocando estos dentro de objetos encapsuladores especiales con esas funcionalidades
+// asignar la funcionalidad a objetos en tiempo real sin descomponer el codigo de los objetos y no usa herencias para agregar funcionalidad
 public class main {
     public main() {
         // 1. Creamos la muñeca base (la fea)

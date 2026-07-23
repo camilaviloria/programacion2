@@ -1,4 +1,5 @@
 package patrones.bridge;
+//clase que contiene las operaciones
 
 public class calculadora {
     protected operaciones implementador;

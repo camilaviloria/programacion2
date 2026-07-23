@@ -1,4 +1,5 @@
 package patrones.bridge;
+//es un patron que permite dividir una clase grande en dos jerarquias difinidas e independientes: abastraccion e implementacion
 
 public class basica implements operaciones {
     @Override

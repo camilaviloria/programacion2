@@ -1,5 +1,5 @@
 package patrones.bridge;
-
+// interfaz que define las operaciones 
 public interface operaciones {
     // Básicas
     double suma(double a, double b);

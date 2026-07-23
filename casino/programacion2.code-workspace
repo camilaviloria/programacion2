@@ -3,6 +3,12 @@
 		{
 			"name": "programacion2",
 			"path": ".."
+		},
+		{
+			"path": "../../../../../Downloads/OpenShop-Front"
+		},
+		{
+			"path": "../../../../../Downloads/interfaz"
 		}
 	],
 	"settings": {

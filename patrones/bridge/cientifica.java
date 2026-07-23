@@ -1,4 +1,5 @@
 package patrones.bridge;
+//clases que implemetan las operaciones
 
 public class cientifica implements operaciones {
     @Override

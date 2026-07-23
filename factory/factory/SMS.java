@@ -1,4 +1,5 @@
 package factory.factory;
+//productos concretos que implementan la interfaz
 
 public class SMS implements Notificaciones {
     @Override

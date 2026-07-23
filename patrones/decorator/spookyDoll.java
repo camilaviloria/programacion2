@@ -1,4 +1,5 @@
 package patrones.decorator;
+// son las clases que heredan de base decorator y añaden los comportamientos extras antes o despues de llamar al objeto envuelto
 public class spookyDoll extends normalDoll {
       public spookyDoll(doll insideDoll){
         super(insideDoll);

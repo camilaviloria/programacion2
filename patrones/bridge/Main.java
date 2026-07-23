@@ -1,4 +1,5 @@
-package patrones.bridge;
+package patrones.bridge; // se usa cuando se quiera separa y organizar una clase con varias variantes de una funcionalidad
+//cuando se quiera extender la funcionalidad de una clase sin modificar su estructura
 
 public class Main {
     public static void main(String[] args) {
