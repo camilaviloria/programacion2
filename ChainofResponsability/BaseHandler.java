@@ -1,5 +1,5 @@
 package ChainofResponsability;
-
+//Implementa la lógica común para almacenar y delegar la solicitud al siguiente manejador (next).
 public abstract class BaseHandler implements Handler {
     private Handler next;
 
