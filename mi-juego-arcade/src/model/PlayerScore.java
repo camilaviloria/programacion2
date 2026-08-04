@@ -1,4 +1,4 @@
-package mi-juego-arcade.src.model;
+package model;
 
 public class PlayerScore {
 

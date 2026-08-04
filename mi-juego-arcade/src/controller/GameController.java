@@ -1,4 +1,4 @@
-package mi-juego-arcade.src.controller;
+package controller;
 
 public class GameController {
 
