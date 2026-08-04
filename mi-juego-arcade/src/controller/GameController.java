@@ -14,18 +14,16 @@ public class GameController {
     private final GameWindow window;
     private final GamePanel panel;
     private final Timer gameLoop;
-    private static final int DELAY = 120; // Velocidad del juego en milisegundos
+    private static final int DELAY = 120; 
 
     public GameController(GameModel model, GameWindow window) {
         this.model = model;
         this.window = window;
         this.panel = window.getGamePanel();
 
-        // Registrar escuchador de teclado en la ventana o panel
         this.window.addKeyListener(new DirectionKeyListener());
         this.window.setFocusable(true);
 
-        // Bucle principal del juego (Timer que actualiza el modelo y repinta la vista)
         this.gameLoop = new Timer(DELAY, e -> {
             if (!model.isGameOver()) {
                 model.update();
@@ -58,7 +56,6 @@ public class GameController {
         }
     }
 
-    // Clase interna para capturar el teclado
     private class DirectionKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
