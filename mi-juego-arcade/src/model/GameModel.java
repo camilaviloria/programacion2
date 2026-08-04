@@ -1,19 +1,17 @@
+package model;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class GameModel {
-    // Definición de direcciones
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
 
-    // Configuración del tablero (unidades de cuadrícula)
     private final int gridWidth;
     private final int gridHeight;
 
-    // Estado del juego
     private List<Point> snake;
     private Point food;
     private Direction currentDirection;
@@ -29,10 +27,8 @@ public class GameModel {
         resetGame();
     }
 
-    // Inicializa o reinicia el estado del juego
     public void resetGame() {
         snake = new ArrayList<>();
-        // Iniciar serpiente con tamaño 3 en el centro
         int startX = gridWidth / 2;
         int startY = gridHeight / 2;
         snake.add(new Point(startX, startY));
@@ -46,7 +42,6 @@ public class GameModel {
         spawnFood();
     }
 
-    // Genera comida en una posición aleatoria no ocupada por la serpiente
     private void spawnFood() {
         Point newFood;
         do {
@@ -58,11 +53,9 @@ public class GameModel {
         food = newFood;
     }
 
-    // Avanza el juego un paso/tick
     public void update() {
         if (gameOver) return;
 
-        // Calcular la nueva posición de la cabeza
         Point head = snake.get(0);
         Point newHead = switch (currentDirection) {
             case UP -> new Point(head.x, head.y - 1);
@@ -71,22 +64,18 @@ public class GameModel {
             case RIGHT -> new Point(head.x + 1, head.y);
         };
 
-        // 1. Verificar colisión con bordes del mapa
         if (newHead.x < 0 || newHead.x >= gridWidth || newHead.y < 0 || newHead.y >= gridHeight) {
             gameOver = true;
             return;
         }
 
-        // 2. Verificar colisión con el propio cuerpo
         if (snake.contains(newHead)) {
             gameOver = true;
             return;
         }
 
-        // Mover la serpiente añadiendo la nueva cabeza
         snake.add(0, newHead);
 
-        // 3. Verificar si comió
         if (newHead.equals(food)) {
             score += 10;
             spawnFood(); // Crece la serpiente (no borramos la cola)
@@ -95,7 +84,6 @@ public class GameModel {
         }
     }
 
-    // Cambia la dirección evitando giros de 180°
     public void setDirection(Direction newDirection) {
         if ((currentDirection == Direction.UP && newDirection != Direction.DOWN) ||
             (currentDirection == Direction.DOWN && newDirection != Direction.UP) ||
@@ -105,7 +93,6 @@ public class GameModel {
         }
     }
 
-    // --- Getters para la Vista y el Controlador ---
 
     public List<Point> getSnake() {
         return snake;
