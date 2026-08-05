@@ -21,18 +21,20 @@ public class GameController {
         this.window = window;
         this.panel = window.getGamePanel();
 
+        this.gameLoop = new Timer(DELAY, e -> onGameTick());
+
         this.window.addKeyListener(new DirectionKeyListener());
         this.window.setFocusable(true);
+    }
 
-        this.gameLoop = new Timer(DELAY, e -> {
-            if (!model.isGameOver()) {
-                model.update();
-                panel.repaint();
-            } else {
-                gameLoop.stop();
-                handleGameOver();
-            }
-        });
+    private void onGameTick() {
+        if (!model.isGameOver()) {
+            model.update();
+            panel.repaint();
+        } else {
+            gameLoop.stop();
+            handleGameOver();
+        }
     }
 
     public void startGame() {
